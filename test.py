@@ -5,17 +5,35 @@ c = Main.Main()
 
 
 def validador (voz):
-    palavras = voz.split()
+    try:
+        palavras = voz.split()
+    except AttributeError:
+        print ("variavel 'voz' vazia")
+        execucao()
     print(voz)
-    if "Jarvis" in palavras:
+    if "Jarvis" in palavras and "diga" in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(c.motor_gpt(c.reconhecedor_voz()))
-        #classe_principal.voz_reprodutor(classe_principal.motor_gpt(texto))
         del palavras
+        execucao()
+    elif "Jarvis" in palavras:
+        voz_user = c.reconhecedor_voz()
+        prompt = f"Crie um comando para usar no Powershell, sem enm uma esplicacao apois mandar o comando, somente o comando puro, a partir da descricao a seguir: {voz_user}"        
+        comando_texto = c.motor_gpt(prompt)
+        print (comando_texto)
+        resposta = input("Deseja executar o comando acima?\n")
+        if resposta == "sim":
+            print (comando_texto)
+            c.voz_reprodutor("Comando executado com sucesso")
+            execucao()
     else:
         print ("Continuo escutando")
-while True:
-    #exto = input ("digite um texto")
-    validador(c.reconhecedor_voz())
-    #validador (texto)
-    #c.voz_reprodutor(c.motor_gpt(texto))
+        
+        
+def execucao ():
+    while True:
+        #exto = input ("digite um texto")
+        validador(c.reconhecedor_voz())
+        #validador (texto)
+        #c.voz_reprodutor(c.motor_gpt(texto))
+execucao()

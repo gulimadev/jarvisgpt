@@ -7,6 +7,7 @@ from pygame import mixer
 from io import BytesIO
 import tempfile
 import os
+import pyttsx3
 
 
 class Main:
@@ -25,6 +26,7 @@ class Main:
             return texto
         except sr.UnknownValueError:
             print("Não foi possível reconhecer o áudio.")
+            
         except sr.RequestError as e:
             print("Erro na conexão com a API de reconhecimento de voz: " + str(e))
 
@@ -42,6 +44,7 @@ class Main:
             max_tokens=3900,
         )
         text = response.choices[0].text
+        print (text)
         return text 
         
     def voz_reprodutor (self, texto):
@@ -53,4 +56,17 @@ class Main:
         mixer.music.play()
         while mixer.music.get_busy():
             continue
-        os.remove(temp_file)
+        try:
+            os.remove(temp_file)
+        except:
+            pass
+    
+    # def voz_reprodutor(self, texto):
+    #     engine = pyttsx3.init()
+    #     voices = engine.getProperty('voices')
+    #     for voice in voices:
+    #         if voice.gender == 'male':
+    #             engine.setProperty('voice', voice.id)
+    #             break
+    #     engine.say(texto)
+    #     engine.runAndWait()
