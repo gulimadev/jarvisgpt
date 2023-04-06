@@ -7,15 +7,15 @@ c = Main.Main()
 def validador (voz):
     palavras = voz.split()
     print(voz)
-    if "JARVIS" in palavras:
+    if "Jarvis" in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(c.motor_gpt(c.reconhecedor_voz()))
         #classe_principal.voz_reprodutor(classe_principal.motor_gpt(texto))
-        
+        del palavras
     else:
         print ("Continuo escutando")
-
-texto = input ("digite um texto")
-#validador(c.reconhecedor_voz())
-#validador (texto)
-c.voz_reprodutor(c.motor_gpt(texto))
+while True:
+    #exto = input ("digite um texto")
+    validador(c.reconhecedor_voz())
+    #validador (texto)
+    #c.voz_reprodutor(c.motor_gpt(texto))

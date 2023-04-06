@@ -11,20 +11,25 @@ import os
 
 class Main:
 
+
+
     def reconhecedor_voz(self):
         r = sr.Recognizer()
         with sr.Microphone() as source:
-            print("E so chamar JARVIS")
+            print("Diga algo...")
             audio = r.listen(source)
+            print("Áudio captado.")
         try:
             texto = r.recognize_google(audio, language='pt-BR')
-            print ("Você disse: " + texto)
+            print("Texto reconhecido: " + texto)
             return texto
-    
         except sr.UnknownValueError:
-            print ("Não entendi o que você disse!")
+            print("Não foi possível reconhecer o áudio.")
         except sr.RequestError as e:
-            print ("Não foi possível realizar a requisição; {0}".format(e))
+            print("Erro na conexão com a API de reconhecimento de voz: " + str(e))
+
+
+
 
 
     def motor_gpt (self, voz):
