@@ -14,12 +14,13 @@ class Main:
     def reconhecedor_voz(self):
         r = sr.Recognizer()
         with sr.Microphone() as source:
-            print("Fale alguma coisa!")
+            print("E so chamar JARVIS")
             audio = r.listen(source)
         try:
             texto = r.recognize_google(audio, language='pt-BR')
             print ("Você disse: " + texto)
             return texto
+    
         except sr.UnknownValueError:
             print ("Não entendi o que você disse!")
         except sr.RequestError as e:
