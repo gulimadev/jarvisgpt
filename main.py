@@ -28,7 +28,7 @@ class Main:
 
     def motor_gpt (self, voz):
 
-        openai.api_key = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        openai.api_key = os.environ.get("OPENAI_API_KEY")
         
         response = openai.Completion.create(
             engine="davinci",
