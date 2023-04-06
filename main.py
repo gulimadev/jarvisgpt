@@ -4,6 +4,7 @@ import pyaudio
 import time
 import openai
 
+
 class Main:
 
     def reconhecedor_voz(self):
@@ -23,10 +24,15 @@ class Main:
 
     def motor_gpt (self, voz):
 
-        #add openai key api 
-        api_openai = 
+        openai.api_key = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         
-        
+        response = openai.Completion.create(
+            engine="davinci",
+            prompt = voz,
+            max_tokens=4000,
+        )
+        text = response.choices[0].text
+        return text 
         
     def voz_reprodutor (self, texto):
         CHUNK = 1024
@@ -35,7 +41,7 @@ class Main:
         RATE = 44100
         
         p = pyaudio.PyAudio()
-        tts = gTTS(text=texto, lang='pt')
+        tts = gTTS(text=texto, lang='pt-br')
         stream = p.open(format=FORMAT, 
                         channels=CHANNELS,
                         rate=RATE,
