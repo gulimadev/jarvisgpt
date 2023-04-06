@@ -10,6 +10,7 @@ import os
 import pyttsx3
 
 
+
 class Main:
 
 
@@ -50,12 +51,17 @@ class Main:
     def voz_reprodutor (self, texto):
         tts = gTTS(text=texto, lang='pt-br')
         temp_file = "temp.mp3"
+        if os.path.exists('temp.mp3'):
+                # Excluir o arquivo
+                os.remove('temp.mp3')
         tts.save(temp_file)
         mixer.init()
         mixer.music.load(temp_file)
         mixer.music.play()
         while mixer.music.get_busy():
             continue
+        mixer.music.stop()
+        mixer.quit()
         try:
             os.remove(temp_file)
         except:
