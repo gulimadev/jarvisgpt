@@ -2,7 +2,7 @@ import speech_recognition as sr
 from gtts import gTTS
 import pyaudio 
 import time
-
+import openai
 
 class Main:
 
@@ -21,4 +21,27 @@ class Main:
             print ("Não foi possível realizar a requisição; {0}".format(e))
 
 
+    def motor_gpt (self, voz):
 
+        #add openai key api 
+        api_openai = 
+        
+        
+        
+    def voz_reprodutor (self, texto):
+        CHUNK = 1024
+        FORMAT = pyaudio.paInt16
+        CHANNELS = 2
+        RATE = 44100
+        
+        p = pyaudio.PyAudio()
+        tts = gTTS(text=texto, lang='pt')
+        stream = p.open(format=FORMAT, 
+                        channels=CHANNELS,
+                        rate=RATE,
+                        output=True,
+                        frames_per_buffer=CHUNK)
+        
+        tts.write_to_fp(stream)
+        stream.stop_stream()
+        p.terminate()
