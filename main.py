@@ -31,9 +31,9 @@ class Main:
         openai.api_key = os.environ.get("OPENAI_API_KEY")
         
         response = openai.Completion.create(
-            engine="davinci",
+            engine="text-davinci-003",
             prompt = voz,
-            max_tokens=4000,
+            max_tokens=2048,
         )
         text = response.choices[0].text
         return text 
