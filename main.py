@@ -3,6 +3,10 @@ from gtts import gTTS
 import pyaudio 
 import time
 import openai
+from pygame import mixer
+from io import BytesIO
+import tempfile
+import os
 
 
 class Main:
@@ -35,19 +39,12 @@ class Main:
         return text 
         
     def voz_reprodutor (self, texto):
-        CHUNK = 1024
-        FORMAT = pyaudio.paInt16
-        CHANNELS = 2
-        RATE = 44100
-        
-        p = pyaudio.PyAudio()
         tts = gTTS(text=texto, lang='pt-br')
-        stream = p.open(format=FORMAT, 
-                        channels=CHANNELS,
-                        rate=RATE,
-                        output=True,
-                        frames_per_buffer=CHUNK)
-        
-        tts.write_to_fp(stream)
-        stream.stop_stream()
-        p.terminate()
+        temp_file = "temp.mp3"
+        tts.save(temp_file)
+        mixer.init()
+        mixer.music.load(temp_file)
+        mixer.music.play()
+        while mixer.music.get_busy():
+            continue
+        os.remove(temp_file)
