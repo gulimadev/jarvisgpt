@@ -33,7 +33,7 @@ class Main:
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt = voz,
-            max_tokens=2048,
+            max_tokens=3900,
         )
         text = response.choices[0].text
         return text 
