@@ -10,32 +10,35 @@ import os
 import pyttsx3
 import requests
 from asciimatics.screen import Screen
-from asciimatics.effects import Print
-from asciimatics.renderers import StaticRenderer
+from asciimatics.screen import Screen
+from asciimatics.effects import Print, Cycle, Stars
+from asciimatics.renderers import FigletText, SpeechBubble
 from asciimatics.scene import Scene
+from asciimatics.renderers import StaticRenderer
 
 
 
 class Main:
 
-    def demo(self, screen):
-        scenes = []
-        effects = [
-            Print(screen, StaticRenderer(images=[".", " /|\\", "/_|_\\"]), 0),
-        ]
-        scenes.append(Scene(effects, 2))
-        effects = [
-            Print(screen, StaticRenderer(images=["   |", " /|\\", "/_|_\\"]), 0),
-        ]
-        scenes.append(Scene(effects, 2))
-        effects = [
-            Print(screen, StaticRenderer(images=["___|", " /|\\", "/_|_\\"]), 0),
-        ]
-        scenes.append(Scene(effects, 2))
-        screen.play(scenes)
-        screen.print_at("Ola, Ola!", 0, 4)
-        screen.refresh()
-        screen.wait_for_input(10)
+    def demo(self,screen):
+        # Criar um renderizador com o texto "Bing"
+        ana = FigletText("Ana", font="banner")
+        # Criar um efeito de ciclo que muda a cor do texto
+        effect1 = Cycle(screen, ana, screen.height // 2 - 3)
+        # Criar um renderizador com o robô
+        robot = StaticRenderer(images=["   /\\_/\\  \n =( °w° )= \n   )   (  //\n  (__ __)// "])
+        # Criar um efeito de impressão que move o robô da esquerda para a direita
+        effect2 = Print(screen, robot, x=0, y=screen.height // 2 + 3, transparent=False, speed=2)
+        # Criar um renderizador com uma bolha de fala
+        speech = SpeechBubble("Ola Ola!")
+        # Criar um efeito de impressão que mostra a bolha de fala acima do robô
+        effect3 = Print(screen, speech, x=10, y=screen.height // 2 - 1, transparent=False)
+        # Criar um efeito de estrelas que preenche o fundo do terminal
+        effect4 = Stars(screen, (screen.width + screen.height) // 2)
+        # Criar uma cena com os efeitos e uma duração de 10 segundos
+        scene = Scene([effect4, effect1, effect2, effect3], 1000)
+        # Reproduzir a cena
+        screen.play([scene], stop_on_resize=True)
 
 
 
