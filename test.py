@@ -4,6 +4,7 @@ from datetime import datetime
 from multiprocessing import Process
 import time
 from asciimatics.screen import Screen
+import re
 
 c = Main.Main()
 man = "Gustavo"
@@ -49,7 +50,27 @@ def validador (voz):
         print ("variavel 'voz' vazia")
         execucao()
     print(voz)
-    if "oi" in palavras and "ana" in palavras:
+    if "ana" in palavras and "alarme" in palavras:
+        c.voz_reprodutor(f"Para que horas deseja definir o alarme?")
+        voz = c.reconhecedor_voz()
+        padrao = r"(\d+):(\d+)" # padrão para extrair a hora e o minuto
+        resultado = re.search(padrao, voz) # busca pelo padrão no texto
+        if resultado: # se encontrou uma correspondência
+            hora = resultado.group(1) # obtém o primeiro grupo de captura (hora)
+            minuto = resultado.group(2) # obtém o segundo grupo de captura (minuto)
+            print(f"Hora: {hora}, Minuto: {minuto}") # imprime os valores extraídos
+            c.ligAlarme(hora, minuto)
+        else: # se não encontrou uma correspondência
+            print("Não foi possível extrair a hora e o minuto do texto")
+        
+   
+   
+   
+    if "ana" in palavras and "modo" in palavras:
+        resp = input ("Digite o que deseja? \n")
+        validador(resp)
+    
+    elif "oi" in palavras and "ana" in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(f"Oi {man}, eu estou te ouvindo!")
         
@@ -86,11 +107,6 @@ def validador (voz):
                     elif chaves in ["quem"]:
                         c.voz_reprodutor(f"Olá! Eu sou a Ana, 'Inteligência Artificial', desenvolvida pelo Dev: Gustavo Lima.")
                         execucao()
-                    elif chaves in ["alarme"]:
-                        c.voz_reprodutor(f"Para que horas deseja definir o alarme?")
-                        voz = c.reconhecedor_voz()
-                        resposta = c.motor_gpt(f"De acordo com que a mensagem a seguir disser as horas retorne apenas as horas neste formato 00 00, ate 23 00, mensagem a seguir: {voz}")
-                        print (resposta)
                     c.voz_reprodutor(f" Ok, {man} estou executando: {chave}")
                     os.system(valor)#del palavras
                     execucao()              
