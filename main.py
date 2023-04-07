@@ -8,10 +8,36 @@ from io import BytesIO
 import tempfile
 import os
 import pyttsx3
+import requests
+from asciimatics.screen import Screen
+from asciimatics.effects import Print
+from asciimatics.renderers import StaticRenderer
+from asciimatics.scene import Scene
 
 
 
 class Main:
+
+    def demo(self, screen):
+        scenes = []
+        effects = [
+            Print(screen, StaticRenderer(images=[".", " /|\\", "/_|_\\"]), 0),
+        ]
+        scenes.append(Scene(effects, 2))
+        effects = [
+            Print(screen, StaticRenderer(images=["   |", " /|\\", "/_|_\\"]), 0),
+        ]
+        scenes.append(Scene(effects, 2))
+        effects = [
+            Print(screen, StaticRenderer(images=["___|", " /|\\", "/_|_\\"]), 0),
+        ]
+        scenes.append(Scene(effects, 2))
+        screen.play(scenes)
+        screen.print_at("Ola, Ola!", 0, 4)
+        screen.refresh()
+        screen.wait_for_input(10)
+
+
 
 
 
@@ -67,3 +93,18 @@ class Main:
             os.remove(temp_file)
         except:
             pass
+    def clima (self):
+        #API_KEY = os.environ.get("CLIMA")
+        API_KEY = 'ff386dfe2eef9bc4b6185ac2f3dc3932'
+        #LOCATION = "sua_localizacao_aqui"
+        LOCATION = "Rosario, BR"
+        url = f"http://api.openweathermap.org/data/2.5/weather?q={LOCATION}&appid={API_KEY}&units=metric"
+        response = requests.get(url)
+        data = response.json()
+        try:
+            temperatura = data["main"]["temp"]
+            descricao_clima = data["weather"][0]["description"]
+            self.voz_reprodutor(f"A temperatura atual é de {temperatura:.1f} graus Celsius, na cidade de {LOCATION}")
+            self.voz_reprodutor(f"A previsão do tempo é de {descricao_clima}.")
+        except KeyError:
+            self.voz_reprodutor(f"No momento não estou conseguindo detectar a temperatura e previsão do tempo.")

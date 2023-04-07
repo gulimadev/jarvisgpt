@@ -1,5 +1,10 @@
 import main as Main
 import os
+from datetime import datetime
+import threading
+import time
+from asciimatics.screen import Screen
+
 
 c = Main.Main()
 
@@ -31,6 +36,8 @@ comandos_windows = {
     "site" : "https://www.google.com/search?q=",
     "chat" : "start https://chat.openai.com/chat",
     "acorda" : "start code & start spotify & start https://chat.openai.com/chat & start https://www.bing.com/chat",
+    "horas" : "que horas sao",
+    "quem" : "teste",
 }
 
 
@@ -54,7 +61,7 @@ def validador (voz):
         
     else:
         for chave, valor in comandos_windows.items():
-            print (f"Esta e a chave que estou olhando: {chave.lower()}")
+            #print (f"Esta e a chave que estou olhando: {chave.lower()}")
             chave_temporaria = chave.lower().split()
             for chaves in chave_temporaria:
                 if chaves in [palavra for palavra in palavras] and "ana" in palavras:
@@ -65,14 +72,23 @@ def validador (voz):
                         os.system(f"start {url}")
                         c.voz_reprodutor(f"Ok, {man}, estou pesquisando {pesquisa} no Google.")
                         execucao()
-                    if chaves in ["acorda"]:
+                    elif chaves in ["acorda"]:
                         c.voz_reprodutor(f"Ok, {man}, vamos começar os trabalhos !!!")
                         os.system(valor)
+                        os.system("wt ping 1.1.1.1 -n 99999999")
+                        execucao()
+                    elif chaves in ["horas"]:
+                        now = datetime.now()
+                        hora = now.strftime("%H:%M:%S")
+                        c.voz_reprodutor(f"Agora são {hora}.")
+                        c.clima()
+                        execucao()    
+                    elif chaves in ["quem"]:
+                        c.voz_reprodutor(f"Olá! Eu sou a Ana, 'Inteligência Artificial', desenvolvida pelo Dev: Gustavo Lima.")
                         execucao()
                     c.voz_reprodutor(f" Ok, {man} estou executando: {chave}")
-                    os.system(valor)
+                    os.system(valor)#del palavras
                     execucao()
-                    #del palavras
             print ("Continuo escutando")
         #del palavras 
         #del voz
@@ -81,8 +97,18 @@ def validador (voz):
         
 def execucao ():
     while True:
- 
-        validador(c.reconhecedor_voz())
+        # criando threads para executar as funções
+        thread_validador = threading.Thread(target=validador(c.reconhecedor_voz()))
+        thread_animacao = threading.Thread(target=lambda: Screen.wrapper(c.demo))
+        #Screen.wrapper(demo)
+        # iniciando as threads
+        thread_animacao.start()
+        thread_validador.start()
 
-c.voz_reprodutor(f"Olá! Eu sou a Ana, 'Inteligência Artificial', desenvolvida pelo Dev: Gustavo Lima.")
+        # esperando as threads terminarem
+        thread_animacao.join()
+        thread_validador.join()
+        #validador(c.reconhecedor_voz())
+
+
 execucao()
