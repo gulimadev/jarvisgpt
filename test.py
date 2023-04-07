@@ -5,10 +5,7 @@ from multiprocessing import Process
 import time
 from asciimatics.screen import Screen
 
-
-
 c = Main.Main()
-
 man = "Gustavo"
 comandos_windows = {
     "navegador": "start chrome",
@@ -89,38 +86,20 @@ def validador (voz):
                     elif chaves in ["quem"]:
                         c.voz_reprodutor(f"Olá! Eu sou a Ana, 'Inteligência Artificial', desenvolvida pelo Dev: Gustavo Lima.")
                         execucao()
-                    # elif chaves in ["alarme"]:
-                    #     c.voz_reprodutor(f"Para que horas deseja definir o alarme?")
-                    #     voz = c.reconhecedor_voz()
-                    #     resposta = c.motor_gpt(f"De acordo com que a mensagem a seguir disser as horas retorne apenas as horas neste formato 00 00, ate 23 00, mensagem a seguir: {voz}")
-                    #     print (resposta)
+                    elif chaves in ["alarme"]:
+                        c.voz_reprodutor(f"Para que horas deseja definir o alarme?")
+                        voz = c.reconhecedor_voz()
+                        resposta = c.motor_gpt(f"De acordo com que a mensagem a seguir disser as horas retorne apenas as horas neste formato 00 00, ate 23 00, mensagem a seguir: {voz}")
+                        print (resposta)
                     c.voz_reprodutor(f" Ok, {man} estou executando: {chave}")
                     os.system(valor)#del palavras
                     execucao()              
-            #print ("Continuo escutando")
-            execucao()
-        #del palavras 
-        #del voz
         execucao()
         
         
 def animacao():
     Screen.wrapper(c.demo)
 
-# def execucao():
-#     while True:
-#         # criando processos para executar as funções
-#         processo_validador = Process(target=validador, args=c.reconhecedor_voz())
-#         processo_animacao = Process(target=animacao) # usar a função animacao em vez de lambda
-#         # iniciando os processos
-#         processo_animacao.start()
-#         processo_validador.start()
-
-#         # esperando os processos terminarem
-#         processo_animacao.join()
-#         processo_validador.join()
-
-# #execucao()
 
 def execucao():
     while True:
