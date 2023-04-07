@@ -89,10 +89,16 @@ def validador (voz):
                     elif chaves in ["quem"]:
                         c.voz_reprodutor(f"Olá! Eu sou a Ana, 'Inteligência Artificial', desenvolvida pelo Dev: Gustavo Lima.")
                         execucao()
+                    # elif chaves in ["alarme"]:
+                    #     c.voz_reprodutor(f"Para que horas deseja definir o alarme?")
+                    #     voz = c.reconhecedor_voz()
+                    #     resposta = c.motor_gpt(f"De acordo com que a mensagem a seguir disser as horas retorne apenas as horas neste formato 00 00, ate 23 00, mensagem a seguir: {voz}")
+                    #     print (resposta)
                     c.voz_reprodutor(f" Ok, {man} estou executando: {chave}")
                     os.system(valor)#del palavras
-                    execucao()
-            print ("Continuo escutando")
+                    execucao()              
+            #print ("Continuo escutando")
+            execucao()
         #del palavras 
         #del voz
         execucao()
