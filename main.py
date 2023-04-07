@@ -115,7 +115,6 @@ class Main:
             self.voz_reprodutor(f"A previsão do tempo é de {descricao_clima}.")
         except KeyError:
             self.voz_reprodutor(f"No momento não estou conseguindo detectar a temperatura e previsão do tempo.")
-            
     def ligAlarme(self, hora, minuto):
         #função alarme
         print(datetime.datetime.now().hour)

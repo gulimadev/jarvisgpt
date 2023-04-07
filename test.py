@@ -4,11 +4,9 @@ from datetime import datetime
 from multiprocessing import Process
 import time
 from asciimatics.screen import Screen
-
-
+import re
 
 c = Main.Main()
-
 man = "Gustavo"
 comandos_windows = {
     "navegador": "start chrome",
@@ -52,7 +50,27 @@ def validador (voz):
         print ("variavel 'voz' vazia")
         execucao()
     print(voz)
-    if "oi" in palavras and "ana" in palavras:
+    if "ana" in palavras and "alarme" in palavras:
+        c.voz_reprodutor(f"Para que horas deseja definir o alarme?")
+        voz = c.reconhecedor_voz()
+        padrao = r"(\d+):(\d+)" # padrão para extrair a hora e o minuto
+        resultado = re.search(padrao, voz) # busca pelo padrão no texto
+        if resultado: # se encontrou uma correspondência
+            hora = resultado.group(1) # obtém o primeiro grupo de captura (hora)
+            minuto = resultado.group(2) # obtém o segundo grupo de captura (minuto)
+            print(f"Hora: {hora}, Minuto: {minuto}") # imprime os valores extraídos
+            c.ligAlarme(hora, minuto)
+        else: # se não encontrou uma correspondência
+            print("Não foi possível extrair a hora e o minuto do texto")
+        
+   
+   
+   
+    if "ana" in palavras and "modo" in palavras:
+        resp = input ("Digite o que deseja? \n")
+        validador(resp)
+    
+    elif "oi" in palavras and "ana" in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(f"Oi {man}, eu estou te ouvindo!")
         
@@ -91,30 +109,13 @@ def validador (voz):
                         execucao()
                     c.voz_reprodutor(f" Ok, {man} estou executando: {chave}")
                     os.system(valor)#del palavras
-                    execucao()
-            print ("Continuo escutando")
-        #del palavras 
-        #del voz
+                    execucao()              
         execucao()
         
         
 def animacao():
     Screen.wrapper(c.demo)
 
-# def execucao():
-#     while True:
-#         # criando processos para executar as funções
-#         processo_validador = Process(target=validador, args=c.reconhecedor_voz())
-#         processo_animacao = Process(target=animacao) # usar a função animacao em vez de lambda
-#         # iniciando os processos
-#         processo_animacao.start()
-#         processo_validador.start()
-
-#         # esperando os processos terminarem
-#         processo_animacao.join()
-#         processo_validador.join()
-
-# #execucao()
 
 def execucao():
     while True:
