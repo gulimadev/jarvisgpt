@@ -1,9 +1,10 @@
 import speech_recognition as sr 
 from gtts import gTTS
 import pyaudio 
-import time
+from time import localtime, strftime
 import openai
 from pygame import mixer
+import pygame
 from io import BytesIO
 import tempfile
 import os
@@ -15,6 +16,9 @@ from asciimatics.effects import Print, Cycle, Stars
 from asciimatics.renderers import FigletText, SpeechBubble
 from asciimatics.scene import Scene
 from asciimatics.renderers import StaticRenderer
+import datetime
+import keyboard
+
 
 
 
@@ -111,3 +115,17 @@ class Main:
             self.voz_reprodutor(f"A previsão do tempo é de {descricao_clima}.")
         except KeyError:
             self.voz_reprodutor(f"No momento não estou conseguindo detectar a temperatura e previsão do tempo.")
+            
+    def ligAlarme(self, hora, minuto):
+        #função alarme
+        print(datetime.datetime.now().hour)
+        while True:
+            if datetime.datetime.now().hour == int(hora) and datetime.datetime.now().minute == int(minuto):
+                os.system("alarme.mp3") #toca a música do alarme
+                print("Pressione ESC para parar o alarme")
+                while True:
+                    if keyboard.is_pressed('esc'): #verifica se o usuário pressionou ESC
+                        os.system("killall alarme.mp3") #para a música do alarme
+                        break
+                break
+            return
