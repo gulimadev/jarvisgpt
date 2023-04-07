@@ -19,6 +19,7 @@ class Main:
         r = sr.Recognizer()
         with sr.Microphone() as source:
             print("Diga algo...")
+            r.adjust_for_ambient_noise(source) 
             audio = r.listen(source)
             print("Áudio captado.")
         try:
@@ -66,13 +67,3 @@ class Main:
             os.remove(temp_file)
         except:
             pass
-    
-    # def voz_reprodutor(self, texto):
-    #     engine = pyttsx3.init()
-    #     voices = engine.getProperty('voices')
-    #     for voice in voices:
-    #         if voice.gender == 'male':
-    #             engine.setProperty('voice', voice.id)
-    #             break
-    #     engine.say(texto)
-    #     engine.runAndWait()

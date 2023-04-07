@@ -1,42 +1,88 @@
 import main as Main
+import os
 
 c = Main.Main()
 
 man = "Gustavo"
+comandos_windows = {
+    "navegador": "start chrome",
+    "explorador de arquivos": "start explorer",
+    "bloco de notas": "start notepad",
+    "painel de controle": "control",
+    "desligar computador": "shutdown /s /t 0",
+    "reiniciar computador": "shutdown /r /t 0",
+    "Spotify": "start spotify",
+    "calculadora": "start calc",
+    "Microsoft Word": "start winword",
+    "Excel": "start excel",
+    "PowerPoint": "start powerpnt",
+    "Outlook": "start outlook",
+    "Paint": "start mspaint",
+    "Adobe Reader": "start acrord32",
+    "Windows Media Player": "start wmplayer",
+    "Skype": "start skype",
+    "Zoom": "start zoom",
+    "Google Drive": "start https://drive.google.com",
+    "OneDrive": "start https://onedrive.live.com",
+    "Bing": "start https://www.bing.com/search?q=",
+    "Google": "start https://www.google.com/search?q=",
+    "YouTube": "start https://www.youtube.com/results?search_query=",
+    "vscode": "start code",
+    "site" : "https://www.google.com/search?q=",
+    "chat" : "start https://chat.openai.com/chat",
+    "acorda" : "start code & start spotify & start https://chat.openai.com/chat & start https://www.bing.com/chat",
+}
+
 
 def validador (voz):
+    palavras = []
     try:
-        palavras = voz.split()
+        palavras = voz.lower().split()
+        if palavras:
+            print (f" Este ======={palavras}")
     except AttributeError:
         print ("variavel 'voz' vazia")
         execucao()
     print(voz)
-    if "Oi" in palavras and "Ana" in palavras:
+    if "oi" in palavras and "ana" in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(f"Oi {man}, eu estou te ouvindo!")
         
         c.voz_reprodutor(c.motor_gpt(c.reconhecedor_voz()))
-        del palavras
+        #del palavras
         execucao()
-    # elif "Jarvis" in palavras:
-    #     voz_user = c.reconhecedor_voz()
-    #     prompt = f"Crie um comando para usar no Powershell, sem enm uma esplicacao apois mandar o comando, somente o comando puro, a partir da descricao a seguir: {voz_user}"        
-    #     comando_texto = c.motor_gpt(prompt)
-    #     print (comando_texto)
-    #     resposta = input("Deseja executar o comando acima?\n")
-    #     if resposta == "sim":
-    #         print (comando_texto)
-    #         c.voz_reprodutor("Comando executado com sucesso")
-    #         execucao()
+        
     else:
-        print ("Continuo escutando")
+        for chave, valor in comandos_windows.items():
+            print (f"Esta e a chave que estou olhando: {chave.lower()}")
+            chave_temporaria = chave.lower().split()
+            for chaves in chave_temporaria:
+                if chaves in [palavra for palavra in palavras] and "ana" in palavras:
+                    if chaves in ["site"]:
+                        index = palavras.index("site") + 1
+                        pesquisa = "+".join(palavras[index:])
+                        url = f"https://www.google.com/search?q={pesquisa}"
+                        os.system(f"start {url}")
+                        c.voz_reprodutor(f"Ok, {man}, estou pesquisando {pesquisa} no Google.")
+                        execucao()
+                    if chaves in ["acorda"]:
+                        c.voz_reprodutor(f"Ok, {man}, vamos começar os trabalhos !!!")
+                        os.system(valor)
+                        execucao()
+                    c.voz_reprodutor(f" Ok, {man} estou executando: {chave}")
+                    os.system(valor)
+                    execucao()
+                    #del palavras
+            print ("Continuo escutando")
+        #del palavras 
+        #del voz
         execucao()
         
         
 def execucao ():
     while True:
-        #exto = input ("digite um texto")
+ 
         validador(c.reconhecedor_voz())
-        #validador (texto)
-        #c.voz_reprodutor(c.motor_gpt(texto))
+
+c.voz_reprodutor(f"Olá! Eu sou a Ana, 'Inteligência Artificial', desenvolvida pelo Dev: Gustavo Lima.")
 execucao()
