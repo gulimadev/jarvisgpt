@@ -1,7 +1,7 @@
 from main import Main
 from asciimatics.screen import Screen
 from app import validador
-import dotenv as dotenv
+from dotenv import load_dotenv
 import pygame
 import spotipy.util as util
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -15,23 +15,14 @@ import base64
 
 
 c = Main()
-dotenv.load_dotenv()
+load_dotenv()
 if __name__ == "__main__":
         # Configuração do ambiente com as credenciais e permissões necessárias
-    # username = os.getenv('SPOTIFY_USERNAME')
-    # client_id = os.getenv('SPOTIPY_CLIENT_ID')
-    # client_secret = os.getenv('SPOTIPY_CLIENT_SECRET')
-    
+    username = os.getenv('SPOTIPY_USERNAME')
+    client_id = os.getenv('SPOTIPY_CLIENT_ID')
+    client_secret = os.getenv('SPOTIPY_CLIENT_SECRET')
 
-    # Autenticação do Spotify
-    # auth_response = requests.post('https://accounts.spotify.com/api/token', {
-    #     'grant_type': 'client_credentials',
-    #     'client_id': client_id,
-    #     'client_secret': client_secret,
-    # })
 
-    client_id = 'eec7c8bec93d4edf9544ee6326994042'
-    client_secret = 'ef55a7e8348a47d4b5c4f6e389c18217'
     scope = "user-modify-playback-state"
 
     client_creds = f'{client_id}:{client_secret}'
