@@ -8,6 +8,7 @@ import re
 
 c = Main.Main()
 man = "Gustavo"
+ia = "ana"
 comandos_windows = {
     "navegador": "start chrome",
     "explorador de arquivos": "start explorer",
@@ -30,7 +31,7 @@ comandos_windows = {
     "OneDrive": "start https://onedrive.live.com",
     "Bing": "start https://www.bing.com/search?q=",
     "Google": "start https://www.google.com/search?q=",
-    "YouTube": "start https://www.youtube.com/results?search_query=",
+    "pesquise YouTube": "start https://www.youtube.com/results?search_query=",
     "vscode": "start code",
     "site" : "https://www.google.com/search?q=",
     "chat" : "start https://chat.openai.com/chat",
@@ -50,11 +51,11 @@ def validador (voz):
         print ("variavel 'voz' vazia")
         execucao()
     print(voz)
-    if "ana" in palavras and "alarme" in palavras:
+    if ia in palavras and "alarme" in palavras:
         c.voz_reprodutor(f"Para que horas deseja definir o alarme?")
-        voz = c.reconhecedor_voz()
+        voz_g = c.reconhecedor_voz()
         padrao = r"(\d+):(\d+)" # padrão para extrair a hora e o minuto
-        resultado = re.search(padrao, voz) # busca pelo padrão no texto
+        resultado = re.search(padrao, voz_g) # busca pelo padrão no texto
         if resultado: # se encontrou uma correspondência
             hora = resultado.group(1) # obtém o primeiro grupo de captura (hora)
             minuto = resultado.group(2) # obtém o segundo grupo de captura (minuto)
@@ -66,11 +67,27 @@ def validador (voz):
    
    
    
-    if "ana" in palavras and "modo" in palavras:
+    elif ia in palavras and "modo" in palavras:
         resp = input ("Digite o que deseja? \n")
         validador(resp)
     
-    elif "oi" in palavras and "ana" in palavras:
+    elif ia in palavras and "significa" in palavras:
+        c.voz_reprodutor(c.motor_gpt(voz))
+    elif ia in palavras and "traduza" in palavras:        
+        c.voz_reprodutor(c.motor_gpt(voz))
+    elif ia in palavras and "calcule" in palavras:
+        c.voz_reprodutor(c.motor_gpt(voz))
+        
+    elif ia in palavras and "pesquise" in palavras or "pesquisa" in palavras and "youtube" in palavras:
+        index = palavras.index("youtube") + 1
+        pesquisa = "+".join(palavras[index:])
+        index_voz = palavras.index("youtube") + 1
+        pesquisa_voz = " ".join(palavras[index_voz:])
+        url = f"https://www.youtube.com/results?search_query={pesquisa}"
+        os.system(f"start {url}")
+        c.voz_reprodutor(f"Ok, {man}, estou pesquisando {pesquisa_voz} no Youtube.")
+    
+    elif "oi" in palavras and ia in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(f"Oi {man}, eu estou te ouvindo!")
         
