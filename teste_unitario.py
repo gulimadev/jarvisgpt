@@ -1,16 +1,13 @@
-from main import Main
+from main import Main, Bank
 from asciimatics.screen import Screen
 from app import validador
 from dotenv import load_dotenv
-import pygame
+import spotipy
+from spotipy import oauth2, SpotifyOAuth
 import spotipy.util as util
 from spotipy.oauth2 import SpotifyClientCredentials
 import os
 from playsound import playsound
-import requests
-import requests_oauthlib
-import json
-import base64
 from requests import post
 
 
@@ -19,43 +16,25 @@ c = Main()
 load_dotenv()
 if __name__ == "__main__":
         # Configuração do ambiente com as credenciais e permissões necessárias
-    username = os.getenv('SPOTIPY_USERNAME')
-    client_id = os.getenv('SPOTIPY_CLIENT_ID')
-    client_secret = os.getenv('SPOTIPY_CLIENT_SECRET')
-    scope = "user-modify-playback-state"
-
-    def get_token ():
-        auth_string = f"{client_id}:{client_secret}"
-        auth_bytes = auth_string.encode("utf-8")
-        auth_base64 = str(base64.b64encode(auth_bytes), "utf-8")
-        
-        url = "https://accounts.spotify.com/api/token"
-        
-        heards = { 
-        "Authorization": f"Basic {auth_base64}",
-        "Content-Type": "application/x-www-form-urlencoded"
-        }
-        data = {"grant_type": "client_credentials"}
-        result = requests.post(url, data=data, headers=heards)
-        json_result = json.loads(result.content)
-        token = json_result["access_token"]
-        
-        
-    def get_auth_header(token):
-        return {"Authorization": f"Bearer {token}"}
-        
-    def search_for_artist (token, artist_name):
-        url = "https://api.spotify.com/v1/search"
-        hearders = get_auth_header(token)
-        query = f"q={artist_name}&type=artist&limit=1"
-        query_url = f"{url}{query}"
-        result = requests.get(query_url, headers=hearders)
-        json_result = json.loads(result.content)
-        print (json_result)        
+    b = Bank()
     
-    search_for_artist(get_token(), "beatles")
-    token = get_token()
+    b.connect()
 
+
+    # os.environ['SPOTIPY_REDIRECT_URI']
+    # username = os.getenv('SPOTIPY_USERNAME')
+    # client_id = os.getenv('SPOTIPY_CLIENT_ID')
+    # client_secret = os.getenv('SPOTIPY_CLIENT_SECRET')
+    # scope = "user-modify-playback-state"
+
+    # redirect_uri = 'http://localhost/'
+
+    # token = util.prompt_for_user_token(username, client_id,
+    #                                 client_secret, redirect_uri)
+    # sp = spotipy.Spotify(auth_manager=SpotifyOAuth(token=token))
+    # results = sp.search(q='Despacito Luis Fonsi', type='track')
+    # track_uri = results['tracks']['items'][0]['uri']
+    # sp.start_playback(uris=[track_uri])
 
 
 

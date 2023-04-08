@@ -14,7 +14,7 @@ man = "Gustavo"
 ia = "ana"
 comandos_windows = {
     "navegador": "start chrome",
-    "explorador de arquivos": "start explorer",
+    "explorador": "start explorer",
     "bloco de notas": "start notepad",
     "painel de controle": "control",
     "desligar computador": "shutdown /s /t 0",
@@ -83,8 +83,7 @@ def validador (voz):
     elif ia in palavras and "traduza" in palavras:        
         c.voz_reprodutor(c.motor_gpt(voz))
     elif ia in palavras and "calcule" in palavras:
-        c.voz_reprodutor(c.motor_gpt(voz))
-        
+        c.voz_reprodutor(c.motor_gpt(voz))      
     elif ia in palavras and "buscar" in palavras or "busca" in palavras and "youtube" in palavras:
         index = palavras.index("youtube") + 1
         pesquisa = "+".join(palavras[index:])

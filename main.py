@@ -12,6 +12,7 @@ from asciimatics.renderers import StaticRenderer
 import datetime
 import keyboard
 import dotenv as dotenv
+import mysql.connector
 
 
 dotenv.load_dotenv()
@@ -121,3 +122,36 @@ class Main:
                         break
                 break
             
+            
+            
+class Bank:
+    #connect bank database
+    
+    cnx = mysql.connector.connect(
+        host = os.getenv("HOST"),
+        user = os.getenv("USER"),
+        password = os.getenv("PASSWORD"),
+        database = os.getenv("DATABASE")
+    )
+    
+    
+    
+    
+    def connect(self, cnx=cnx):
+        self.cnx = cnx
+        self.cursor = cnx.cursor()
+        self.query = "SELECT nome, email FROM clientes;"
+        self.cursor.execute(self.query)
+
+        # Ler os resultados da query
+        for (nome, email) in self.cursor:
+            print(f"Nome: {nome} - Email: {email}")
+
+        # Fechar o cursor e a conexão
+        self.cursor.close()
+        cnx.close()
+        
+        
+        
+        return self.cursor
+        
