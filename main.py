@@ -155,3 +155,19 @@ class Bank:
         
         return self.cursor
         
+    def criar_evento(self, evento, data, hora):
+        self.query = "INSERT INTO agenda (evento, data, hora) VALUES (%s, %s, %s)"
+        self.cursor.execute(self.query, (evento, data, hora))
+        self.cnx.commit()
+        
+    def listar_eventos(self):
+        self.query = "SELECT id, evento, data, hora FROM agenda ORDER BY data ASC"
+        self.cursor.execute(self.query)
+
+        # Ler os resultados da query
+        for (id, evento, data, hora) in self.cursor:
+            print(f"ID: {id} - Evento: {evento} - Data: {data} - Hora: {hora}")
+
+        # Fechar o cursor e a conexão
+        self.cursor.close()
+        self.cnx.close()
