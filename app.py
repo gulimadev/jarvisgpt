@@ -1,8 +1,7 @@
 import main as Main
 import os
 from datetime import datetime
-from multiprocessing import Process
-import time
+import threading
 from asciimatics.screen import Screen
 import re
 
@@ -40,6 +39,10 @@ comandos_windows = {
     "quem" : "teste",
 }
 
+def execucao():
+    while True:
+        validador(c.reconhecedor_voz())
+
 
 def validador (voz):
     palavras = []
@@ -60,13 +63,13 @@ def validador (voz):
             hora = resultado.group(1) # obtém o primeiro grupo de captura (hora)
             minuto = resultado.group(2) # obtém o segundo grupo de captura (minuto)
             print(f"Hora: {hora}, Minuto: {minuto}") # imprime os valores extraídos
-            c.ligAlarme(hora, minuto)
+            thread_alarme = threading.Thread(target=c.ligAlarme, args=(hora, minuto))
+            # inicia a thread
+            thread_alarme.start()
+            execucao()
         else: # se não encontrou uma correspondência
             print("Não foi possível extrair a hora e o minuto do texto")
         
-   
-   
-   
     elif ia in palavras and "modo" in palavras:
         resp = input ("Digite o que deseja? \n")
         validador(resp)
@@ -78,7 +81,7 @@ def validador (voz):
     elif ia in palavras and "calcule" in palavras:
         c.voz_reprodutor(c.motor_gpt(voz))
         
-    elif ia in palavras and "pesquise" in palavras or "pesquisa" in palavras and "youtube" in palavras:
+    elif ia in palavras and "buscar" in palavras or "busca" in palavras and "youtube" in palavras:
         index = palavras.index("youtube") + 1
         pesquisa = "+".join(palavras[index:])
         index_voz = palavras.index("youtube") + 1
@@ -134,9 +137,8 @@ def animacao():
     Screen.wrapper(c.demo)
 
 
-def execucao():
-    while True:
-        validador(c.reconhecedor_voz())
 
-
-execucao()
+if __name__ == "__main__":
+    anime = threading.Thread(target=animacao)
+    anime.start()
+    execucao()

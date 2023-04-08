@@ -1,17 +1,10 @@
 import speech_recognition as sr 
 from gtts import gTTS
-import pyaudio 
 from time import localtime, strftime
 import openai
 from pygame import mixer
-import pygame
-from io import BytesIO
-import tempfile
 import os
-import pyttsx3
 import requests
-from asciimatics.screen import Screen
-from asciimatics.screen import Screen
 from asciimatics.effects import Print, Cycle, Stars
 from asciimatics.renderers import FigletText, SpeechBubble
 from asciimatics.scene import Scene
@@ -34,7 +27,7 @@ class Main:
         # Criar um efeito de impressão que move o robô da esquerda para a direita
         effect2 = Print(screen, robot, x=0, y=screen.height // 2 + 3, transparent=False, speed=2)
         # Criar um renderizador com uma bolha de fala
-        speech = SpeechBubble("Ola Ola!")
+        speech = SpeechBubble("Developer: Gustavo Lima")
         # Criar um efeito de impressão que mostra a bolha de fala acima do robô
         effect3 = Print(screen, speech, x=10, y=screen.height // 2 - 1, transparent=False)
         # Criar um efeito de estrelas que preenche o fundo do terminal
@@ -127,4 +120,4 @@ class Main:
                         os.system("killall alarme.mp3") #para a música do alarme
                         break
                 break
-            return
+            
