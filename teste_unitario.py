@@ -18,7 +18,9 @@ if __name__ == "__main__":
         # Configuração do ambiente com as credenciais e permissões necessárias
     b = Bank()
     
-    b.connect()
+    b.criar_evento('Estudar', '2023-04-10', '14:30:00')
+    
+    b.listar_eventos()
 
 
     # os.environ['SPOTIPY_REDIRECT_URI']

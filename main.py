@@ -13,6 +13,7 @@ import datetime
 import keyboard
 import dotenv as dotenv
 import mysql.connector
+import datetime
 
 
 dotenv.load_dotenv()
@@ -126,41 +127,41 @@ class Main:
             
 class Bank:
     #connect bank database
+    def __init__(self):
+        self.connect()
+
     
-    cnx = mysql.connector.connect(
+    
+    
+    def connect(self):
+        self.cnx = mysql.connector.connect(
         host = os.getenv("HOST"),
         user = os.getenv("USER"),
         password = os.getenv("PASSWORD"),
         database = os.getenv("DATABASE")
-    )
-    
-    
-    
-    
-    def connect(self, cnx=cnx):
-        self.cnx = cnx
-        self.cursor = cnx.cursor()
-        self.query = "SELECT nome, email FROM clientes;"
-        self.cursor.execute(self.query)
+        )
+        self.cursor = self.cnx.cursor()
+        
+        
+        #return self.cursor
+        
+    def criar_evento(self, evento, data, hora):
+        self.connect()
+        data_evento = datetime.date(2023, 4, 15)
+        data_evento_str = data_evento.strftime('%Y-%m-%d')
+        self.query = "INSERT INTO agenda (evento, data, hora) VALUES (%s, %s, %s)"
+        self.cursor.execute(self.query, (evento, datetime.datetime.strptime(data, '%Y-%m-%d').date(), hora))
+        self.cnx.commit()
 
-        # Ler os resultados da query
-        for (nome, email) in self.cursor:
-            print(f"Nome: {nome} - Email: {email}")
+        print(f"Evento '{evento}' criado com sucesso na data {data} às {hora}")
 
         # Fechar o cursor e a conexão
         self.cursor.close()
-        cnx.close()
-        
-        
-        
-        return self.cursor
-        
-    def criar_evento(self, evento, data, hora):
-        self.query = "INSERT INTO agenda (evento, data, hora) VALUES (%s, %s, %s)"
-        self.cursor.execute(self.query, (evento, data, hora))
-        self.cnx.commit()
+        self.cnx.close()
+
         
     def listar_eventos(self):
+        self.connect()
         self.query = "SELECT id, evento, data, hora FROM agenda ORDER BY data ASC"
         self.cursor.execute(self.query)
 

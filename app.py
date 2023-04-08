@@ -83,7 +83,10 @@ def validador (voz):
     elif ia in palavras and "traduza" in palavras:        
         c.voz_reprodutor(c.motor_gpt(voz))
     elif ia in palavras and "calcule" in palavras:
-        c.voz_reprodutor(c.motor_gpt(voz))      
+        c.voz_reprodutor(c.motor_gpt(voz))  
+    elif ia in palavras and "converta" in palavras:
+        c.voz_reprodutor(c.motor_gpt(voz))  
+            
     elif ia in palavras and "buscar" in palavras or "busca" in palavras and "youtube" in palavras:
         index = palavras.index("youtube") + 1
         pesquisa = "+".join(palavras[index:])
@@ -92,6 +95,19 @@ def validador (voz):
         url = f"https://www.youtube.com/results?search_query={pesquisa}"
         os.system(f"start {url}")
         c.voz_reprodutor(f"Ok, {man}, estou pesquisando {pesquisa_voz} no Youtube.")
+    
+    elif "lembre" in palavras:
+        
+        prompt_personalizado = f"Voce iria retornar uma mensagem com esses formatos'Me lembre de estudar' 2023-04-10  14:30:00, para a msg ser enviar a uma ia que cria eventos neste formato, irei extrair em uma regex em python a mensagem a seguir: {voz}"
+        lembrete = c.motor_gpt(prompt_personalizado)
+        os.system(f"wc echo '{lembrete}'")
+        print (lembrete)
+        
+        
+        
+        pass
+    elif ia in palavras and "criou" in palavras:
+        c.voz_reprodutor(f"Quem me criou foi o Developer: Gustavo Lima")
     
     elif "oi" in palavras and ia in palavras:
         print ("Oi eu estou te ouvindo!")
