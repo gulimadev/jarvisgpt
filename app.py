@@ -4,8 +4,12 @@ from datetime import datetime
 import threading
 from asciimatics.screen import Screen
 import re
+import dotenv as dotenv
+import spotipy
+import spotipy.util as util
 
 c = Main.Main()
+dotenv.load_dotenv()
 man = "Gustavo"
 ia = "ana"
 comandos_windows = {

@@ -11,9 +11,10 @@ from asciimatics.scene import Scene
 from asciimatics.renderers import StaticRenderer
 import datetime
 import keyboard
+import dotenv as dotenv
 
 
-
+dotenv.load_dotenv()
 
 class Main:
 
@@ -94,10 +95,9 @@ class Main:
         except:
             pass
     def clima (self):
-        #API_KEY = os.environ.get("CLIMA")
-        API_KEY = 'ff386dfe2eef9bc4b6185ac2f3dc3932'
-        #LOCATION = "sua_localizacao_aqui"
-        LOCATION = "Rosario, BR"
+        
+        API_KEY = os.getenv("CLIMA")
+        LOCATION = os.getenv("CIDADE")
         url = f"http://api.openweathermap.org/data/2.5/weather?q={LOCATION}&appid={API_KEY}&units=metric"
         response = requests.get(url)
         data = response.json()
