@@ -179,6 +179,7 @@ class Bank:
         self.cursor.execute(self.query_lista)
         resultados = self.cursor.fetchall() # Obter uma lista de tuplas
         m.voz_reprodutor(f"Irei listar os lembretes cadastrados")
+        lembretes = set()
         if len(resultados) == 0:
             m.voz_reprodutor(f"Não há lembretes cadastrados")
             print ("Não há lembretes cadastrados")
@@ -186,8 +187,9 @@ class Bank:
         for (id, evento, data, hora) in resultados: # Iterar sobre a lista de tuplas
             print(f"ID: {id} - Evento: {evento} - Data: {data} - Hora: {hora}")
             m.voz_reprodutor(f"Lembrete de : {evento} na data {data} às {hora}")
-        
+            lembretes.add(f"Lembrete de : {evento} na data {data} às {hora} \n")
         # Fechar o cursor e a conexão
+        os.system(f"wt new-tab -p 'Command Prompt' cmd /k 'echo {lembretes}'")
         self.cursor.close()
         self.cnx.close()
         
