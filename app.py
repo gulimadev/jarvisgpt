@@ -19,7 +19,7 @@ comandos_windows = {
     "painel de controle": "control",
     "desligar computador": "shutdown /s /t 0",
     "reiniciar computador": "shutdown /r /t 0",
-    "hibernar computador": "shutdown /h /t 0",
+    "dormir computador": "powercfg /hibernate on",
     "Spotify": "start spotify",
     "calculadora": "start calc",
     "Microsoft Word": "start winword",
