@@ -110,8 +110,11 @@ def validador (voz):
         except openai.error.InvalidRequestError:
             c.voz_reprodutor("Desculpe, mensagem muito grande, poderia repetir?")
             execucao()
-        print(resposta)
-
+        try:
+            print(resposta)
+        except UnboundLocalError:
+            print("Erro variavel resposta")
+            execucao()
         # Remover os caracteres \n e | do início e do final da string resposta
         resposta = resposta.strip("\n|")
 
@@ -141,7 +144,25 @@ def validador (voz):
 
         # Chamar a função criar_evento com os parâmetros corretos
         b.criar_evento(evento, data, hora)
-    
+    elif ("ler" in palavras or "lista" in palavras or "liste"  in palavras  or "listar" in palavras) and ("lembretes" in palavras or "lembrete" in palavras):
+        b = Main.Bank()
+        b.listar_eventos()
+        execucao()
+    elif ("deleta" in palavras or "deletar" in palavras or "apagar" in palavras) and ("lembretes" in palavras or "lembrente" in palavras):
+            b = Main.Bank()
+            while True:    
+                c.voz_reprodutor("Você tem certeza que deseja deletar todos os lembretes?")
+                try:
+                    confirma = c.reconhecedor_voz().lower()
+                except AttributeError:
+                    confirma = c.reconhecedor_voz().lower()
+                conf = confirma.split()
+                if "sim" in conf:
+                    b.deletar_eventos()
+                    execucao()
+                elif "não" in conf:
+                    c.voz_reprodutor("Ok, não irei deletar os lembretes")
+                    execucao()
     elif ia in palavras and "criou" in palavras:
         c.voz_reprodutor(f"Quem me criou foi o Developer: Gustavo Lima")
     
@@ -203,6 +224,13 @@ def string_para_datetime(string_data_hora, formato):
         return datetime.strptime(string_data_hora, formato) # converte a string em um objeto datetime
 
 if __name__ == "__main__":
+    def alarme():
+        b = Main.Bank()
+        while True:
+            b.alarme_lembretes()
+    
     anime = threading.Thread(target=animacao)
+    lembrete = threading.Thread(target=alarme)
     anime.start()
+    lembrete.start()
     execucao()

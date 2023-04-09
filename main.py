@@ -16,6 +16,7 @@ import mysql.connector
 import datetime
 
 
+
 dotenv.load_dotenv()
 
 class Main:
@@ -173,14 +174,69 @@ class Bank:
         
     def listar_eventos(self):
         self.connect()
-        self.query = "SELECT id, evento, data, hora FROM agenda ORDER BY data ASC"
-        self.cursor.execute(self.query)
-
-        # Ler os resultados da query
-        for (id, evento, data, hora) in self.cursor:
+        m = Main()
+        self.query_lista = "SELECT id, evento, data, hora FROM agenda ORDER BY data ASC;"
+        self.cursor.execute(self.query_lista)
+        resultados = self.cursor.fetchall() # Obter uma lista de tuplas
+        m.voz_reprodutor(f"Irei listar os lembretes cadastrados")
+        if len(resultados) == 0:
+            m.voz_reprodutor(f"Não há lembretes cadastrados")
+            print ("Não há lembretes cadastrados")
+            return
+        for (id, evento, data, hora) in resultados: # Iterar sobre a lista de tuplas
             print(f"ID: {id} - Evento: {evento} - Data: {data} - Hora: {hora}")
-            
-
+            m.voz_reprodutor(f"Lembrete de : {evento} na data {data} às {hora}")
+        
         # Fechar o cursor e a conexão
         self.cursor.close()
         self.cnx.close()
+        
+    def deletar_eventos(self):
+        self.connect()
+        m = Main()
+        self.query_delete = "DELETE FROM agenda"
+        self.cursor.execute(self.query_delete) # Executar a query de delete
+        self.cnx.commit() # Confirmar as alterações no banco de dados
+        if self.cursor.rowcount == 0: # Verificar se alguma linha foi afetada
+            m.voz_reprodutor(f"Não há lembretes cadastrados")
+            print ("Não há lembretes cadastrados")
+            return
+        else: # Caso contrário, informar quantas linhas foram deletadas
+            m.voz_reprodutor(f"Todos os {self.cursor.rowcount} lembretes foram deletados")
+            print (f"Todos os {self.cursor.rowcount} lembretes foram deletados")
+            
+            
+    def alarme_lembretes(self):
+        # Esta função consulta os lembretes da tabela agenda e compara com a data e hora atual
+        # Conectar ao banco de dados
+        
+        self.connect()
+        m = Main()
+        # Obter a data e hora atual
+        agora = datetime.datetime.now()
+        # Formatar a data e hora no mesmo formato da tabela agenda
+        agora_str = agora.strftime("%Y-%m-%d %H:%M:%S")
+        # Consultar os lembretes que coincidem com a data e hora atual
+        self.query_consulta = "SELECT id, evento FROM agenda WHERE data = %s AND hora = %s"
+        self.cursor.execute(self.query_consulta, (agora_str[:10], agora_str[11:]))
+        # Obter os resultados da consulta
+        resultados = self.cursor.fetchall()
+        # Se houver algum resultado, disparar um alarme para cada um
+        if resultados:
+            for (id, evento) in resultados:
+                print(f"Lembrete: {evento}")
+                m.voz_reprodutor(f"Lembrete: {evento}")
+                msg_ = f"O lembrete '{evento}' está programado para agora"
+                os.system(f"wt new-tab -p 'Command Prompt' cmd /k '{msg_}'")
+                # Definir um manipulador de sinal para o alarme
+                os.system(f"start alarme.mp3") #toca a música do alarme
+                print("Pressione ESC para parar o alarme")
+                while True:
+                    if keyboard.is_pressed('esc'): #verifica se o usuário pressionou ESC
+                        os.system("killall alarme.mp3") #para a música do alarme
+                        break
+                break
+        # Fechar o cursor e a conexão
+        self.cursor.close()
+        self.cnx.close()
+        #self.root.after(20000, self.alarme_lembretes)
