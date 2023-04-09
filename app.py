@@ -88,7 +88,7 @@ def validador (voz):
     elif ia in palavras and "converta" in palavras:
         c.voz_reprodutor(c.motor_gpt(voz))  
             
-    elif ia in palavras and "buscar" in palavras or "busca" in palavras and "youtube" in palavras:
+    elif (ia in palavras) and ("buscar" in palavras or "busca" in palavras or "procure" in palavras) and "youtube" in palavras:
         index = palavras.index("youtube") + 1
         pesquisa = "+".join(palavras[index:])
         index_voz = palavras.index("youtube") + 1
@@ -164,6 +164,13 @@ def validador (voz):
                     execucao()
     elif ia in palavras and "criou" in palavras:
         c.voz_reprodutor(f"Quem me criou foi o Developer: Gustavo Lima")
+    elif ia in palavras and "receita" in palavras:
+        resposta_receita = c.motor_gpt(f"irei Te chamar de {ia} e te pedir uma receita:{voz}")
+        with open("receitas.txt", "w", encoding="utf-8") as arquivo:
+            arquivo.write(resposta_receita)
+            arquivo.close()
+        os.system("start receitas.txt")
+        c.voz_reprodutor(resposta_receita)
     
     elif "oi" in palavras and ia in palavras:
         print ("Oi eu estou te ouvindo!")
