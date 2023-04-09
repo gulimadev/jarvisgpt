@@ -6,7 +6,6 @@ import threading
 from asciimatics.screen import Screen
 import re
 import dotenv as dotenv
-import spotipy
 import spotipy.util as util
 import openai
 
@@ -210,8 +209,9 @@ def validador (voz):
         
         
 def animacao():
+    
     Screen.wrapper(c.demo)
-
+    
 
 def string_para_datetime(string_data_hora, formato):
         # Converte uma string com uma data/hora em um objeto datetime
