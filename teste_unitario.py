@@ -9,6 +9,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import os
 from playsound import playsound
 from requests import post
+import datetime
 
 
 
@@ -16,11 +17,9 @@ c = Main()
 load_dotenv()
 if __name__ == "__main__":
         # Configuração do ambiente com as credenciais e permissões necessárias
-    b = Bank()
-    
-    b.criar_evento('Estudar', '2023-04-10', '14:30:00')
-    
-    b.listar_eventos()
+    agora = datetime.datetime.now()
+    data_formatada = agora.strftime("%Y-%m-%d %H:%M:%S")
+    print(data_formatada)
 
 
     # os.environ['SPOTIPY_REDIRECT_URI']

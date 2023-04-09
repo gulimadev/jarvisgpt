@@ -1,12 +1,14 @@
 import main as Main
 import os
 from datetime import datetime
+import datetime
 import threading
 from asciimatics.screen import Screen
 import re
 import dotenv as dotenv
 import spotipy
 import spotipy.util as util
+import openai
 
 c = Main.Main()
 dotenv.load_dotenv()
@@ -96,16 +98,50 @@ def validador (voz):
         os.system(f"start {url}")
         c.voz_reprodutor(f"Ok, {man}, estou pesquisando {pesquisa_voz} no Youtube.")
     
-    elif "lembre" in palavras:
+    elif "lembre" in palavras or "lembra" in palavras and "de" in palavras:
+        agora = datetime.datetime.now()
+        data_formatada = agora.strftime("%Y-%m-%d %H:%M:%S")
+        print(data_formatada)
+        prompt_personalizado = f"Baseado na data de hoje:{data_formatada},calcule: Por favor crie um event com a mensagem: 'Sua mensagem aqui' e a data/hora: 'YYYY-MM-DD HH:MM:SS'.:{voz}, pode substituir a msg anterior confirme solicitado. Sua resposta deve ser em formato de tabela, com duas colunas: uma para a mensagem do evento e outra para a data/hora do evento. Aqui está um exemplo do formato esperado:\n\n|Mensagem|Data/Hora|\n|Exemplo|YYYY-MM-DD HH:MM:SS|" 
+        try:
+            resposta = c.motor_gpt(prompt_personalizado)
+        # Imprimir a string resposta
         
-        prompt_personalizado = f"Voce iria retornar uma mensagem com esses formatos'Me lembre de estudar' 2023-04-10  14:30:00, para a msg ser enviar a uma ia que cria eventos neste formato, irei extrair em uma regex em python a mensagem a seguir: {voz}"
-        lembrete = c.motor_gpt(prompt_personalizado)
-        os.system(f"wc echo '{lembrete}'")
-        print (lembrete)
-        
-        
-        
-        pass
+        except openai.error.InvalidRequestError:
+            c.voz_reprodutor("Desculpe, mensagem muito grande, poderia repetir?")
+            execucao()
+        print(resposta)
+
+        # Remover os caracteres \n e | do início e do final da string resposta
+        resposta = resposta.strip("\n|")
+
+        # Imprimir a lista resultante do método split("|")
+        print(resposta.split("|"))
+
+        # Extrair o evento da string resposta
+        evento = resposta.split("|")[0]
+
+        # Extrair a data e a hora da string resposta
+        data_hora = resposta.split("|")[1]
+
+        # Imprimir a lista resultante do método split()
+        print(data_hora.split())
+
+        # Dividir a data e a hora em duas strings separadas
+        data = data_hora.split()[0]
+        hora = data_hora.split()[1]
+
+        # Imprimir as strings evento, data e hora
+        print(evento)
+        print(data)
+        print(hora)
+
+        # Criar uma instância da classe Bank
+        b = Main.Bank()
+
+        # Chamar a função criar_evento com os parâmetros corretos
+        b.criar_evento(evento, data, hora)
+    
     elif ia in palavras and "criou" in palavras:
         c.voz_reprodutor(f"Quem me criou foi o Developer: Gustavo Lima")
     
@@ -156,6 +192,15 @@ def animacao():
     Screen.wrapper(c.demo)
 
 
+def string_para_datetime(string_data_hora, formato):
+        # Converte uma string com uma data/hora em um objeto datetime
+        # Parâmetros:
+        # string_data_hora: uma string que representa uma data/hora
+        # formato: uma string que representa o formato da data/hora
+        # Retorno:
+        # Um objeto datetime correspondente à string_data_hora
+
+        return datetime.strptime(string_data_hora, formato) # converte a string em um objeto datetime
 
 if __name__ == "__main__":
     anime = threading.Thread(target=animacao)

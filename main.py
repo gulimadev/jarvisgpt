@@ -147,13 +147,24 @@ class Bank:
         
     def criar_evento(self, evento, data, hora):
         self.connect()
-        data_evento = datetime.date(2023, 4, 15)
-        data_evento_str = data_evento.strftime('%Y-%m-%d')
         self.query = "INSERT INTO agenda (evento, data, hora) VALUES (%s, %s, %s)"
-        self.cursor.execute(self.query, (evento, datetime.datetime.strptime(data, '%Y-%m-%d').date(), hora))
-        self.cnx.commit()
-
-        print(f"Evento '{evento}' criado com sucesso na data {data} às {hora}")
+        # usar try-except para capturar possíveis erros de índice ou formato
+        try:
+            # usar strip("|") para remover os caracteres "|" do início e do final da string data
+            data = data.strip("|")
+            # usar o formato '%y-%m-%d' para converter a string data em um objeto date
+            data_obj = datetime.datetime.strptime(data, '%Y-%m-%d')
+            # executar a query com os parâmetros corretos
+            self.cursor.execute(self.query, (evento, data_obj, hora))
+            self.cnx.commit()
+            m = Main()
+            m.voz_reprodutor(f"Evento '{evento}' criado com sucesso na data {data} às {hora}")
+        except IndexError:
+            print("Erro: índice da lista fora do alcance")
+            # fazer algo para corrigir o problema
+        except ValueError:
+            print("Erro: dados de tempo não correspondem ao formato")
+            # fazer algo para corrigir o problema
 
         # Fechar o cursor e a conexão
         self.cursor.close()
@@ -168,6 +179,7 @@ class Bank:
         # Ler os resultados da query
         for (id, evento, data, hora) in self.cursor:
             print(f"ID: {id} - Evento: {evento} - Data: {data} - Hora: {hora}")
+            
 
         # Fechar o cursor e a conexão
         self.cursor.close()
