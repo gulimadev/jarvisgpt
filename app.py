@@ -6,7 +6,6 @@ import threading
 from asciimatics.screen import Screen
 import re
 import dotenv as dotenv
-import spotipy.util as util
 import openai
 
 c = Main.Main()
@@ -16,10 +15,11 @@ ia = "ana"
 comandos_windows = {
     "navegador": "start chrome",
     "explorador": "start explorer",
-    "bloco de notas": "start notepad",
+    "bloco": "start notepad",
     "painel de controle": "control",
     "desligar computador": "shutdown /s /t 0",
     "reiniciar computador": "shutdown /r /t 0",
+    "hibernar computador": "shutdown /h /t 0",
     "Spotify": "start spotify",
     "calculadora": "start calc",
     "Microsoft Word": "start winword",
@@ -178,7 +178,7 @@ def validador (voz):
             #print (f"Esta e a chave que estou olhando: {chave.lower()}")
             chave_temporaria = chave.lower().split()
             for chaves in chave_temporaria:
-                if chaves in [palavra for palavra in palavras] and "ana" in palavras:
+                if chaves in [palavra for palavra in palavras] and ia in palavras:
                     if chaves in ["site"]:
                         index = palavras.index("site") + 1
                         pesquisa = "+".join(palavras[index:])
@@ -194,7 +194,7 @@ def validador (voz):
                         os.system("wt ping 1.1.1.1 -n 99999999")
                         execucao()
                     elif chaves in ["horas"]:
-                        now = datetime.now()
+                        now = datetime.datetime.now()
                         hora = now.strftime("%H:%M:%S")
                         c.voz_reprodutor(f"Agora são {hora}.")
                         c.clima()
@@ -214,12 +214,7 @@ def animacao():
     
 
 def string_para_datetime(string_data_hora, formato):
-        # Converte uma string com uma data/hora em um objeto datetime
-        # Parâmetros:
-        # string_data_hora: uma string que representa uma data/hora
-        # formato: uma string que representa o formato da data/hora
-        # Retorno:
-        # Um objeto datetime correspondente à string_data_hora
+
 
         return datetime.strptime(string_data_hora, formato) # converte a string em um objeto datetime
 
