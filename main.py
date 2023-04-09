@@ -227,7 +227,7 @@ class Bank:
                 print(f"Lembrete: {evento}")
                 m.voz_reprodutor(f"Lembrete: {evento}")
                 msg_ = f"O lembrete '{evento}' está programado para agora"
-                os.system(f"wt new-tab -p 'Command Prompt' cmd /k '{msg_}'")
+                os.system(f"wt new-tab -p 'Command Prompt' cmd /k 'echo {msg_}'")
                 # Definir um manipulador de sinal para o alarme
                 os.system(f"start alarme.mp3") #toca a música do alarme
                 print("Pressione ESC para parar o alarme")
