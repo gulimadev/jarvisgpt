@@ -233,6 +233,11 @@ class Bank:
                 # Definir um manipulador de sinal para o alarme
                 os.system(f"start alarme.mp3") #toca a música do alarme
                 print("Pressione ESC para parar o alarme")
+                sql_delete_query = "DELETE FROM agenda WHERE data < %s OR (data = %s AND hora < %s)"
+                agora = datetime.datetime.now()
+                agora_str = agora.strftime("%Y-%m-%d %H:%M:%S")
+                self.cursor.execute(sql_delete_query, (agora_str[:10], agora_str[:10], agora_str[11:]))
+                self.cnx.commit()
                 while True:
                     if keyboard.is_pressed('esc'): #verifica se o usuário pressionou ESC
                         os.system("killall alarme.mp3") #para a música do alarme
