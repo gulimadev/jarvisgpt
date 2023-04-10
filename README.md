@@ -21,7 +21,7 @@ git clone https://github.com/gulimadev/jarvisgpt.git
 Em seguida, você pode entrar na pasta do projeto e executar o arquivo test.py:
 
 cd jarvisgpt
-python test.py
+python app.py
 Exemplos de uso
 Para usar o JarvisGPT, você precisa ter um microfone conectado ao seu computador. Depois de executar o programa, você pode falar com o JarvisGPT usando comandos de voz. Por exemplo, você pode dizer:
 
