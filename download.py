@@ -6,15 +6,17 @@ from main import Main
 class Download:
     def download_and_convert_video(self):
             url = input("Digite a URL do vídeo ou digite 'sair' para sair:")
+            
+            downloader_thread = threading.Thread(target=d.download_and_convert_video, args=())
+            downloader_thread.start()
             if url == "sair":
-                return os.system("explorer.exe .")
+                os.system("explorer.exe .")
+                exit()
             # Download do vídeo
             m = Main()
             yt = YouTube(url)
             video = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
             video.download()
-            downloader_thread = threading.Thread(target=self.download_and_convert_video, args=(url,))
-            downloader_thread.start()
             # Conversão para mp3
             video_file = video.default_filename
             video_clip = VideoFileClip(video_file)

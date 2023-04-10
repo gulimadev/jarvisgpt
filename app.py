@@ -93,7 +93,8 @@ def validador (voz):
     elif ia in palavras and "download" in palavras:
         b = Main.Bank()
         c.voz_reprodutor("Iniciando modo download")
-        terminal = threading.Thread(target=os.system, args=(f"wt new-tab -p 'windows-terminal' cmd /k python .\download.py",))
+        arg = r"wt new-tab -p 'windows-terminal' cmd /k python C:\Users\guuhf\Desktop\projetos\jarvisgpt\download.py"
+        terminal = threading.Thread(target=os.system, args=(arg,))
         terminal.start()
     elif (ia in palavras) and ("buscar" in palavras or "busca" in palavras or "procure" in palavras) and "youtube" in palavras:
         index = palavras.index("youtube") + 1
