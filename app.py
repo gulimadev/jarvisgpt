@@ -83,7 +83,7 @@ def validador (voz):
         c.voz_reprodutor(c.motor_gpt(voz))
     elif ia in palavras and "traduza" in palavras:        
         c.voz_reprodutor(c.motor_gpt(voz))
-    elif ia in palavras and "calcule" in palavras:
+    elif ia in palavras and "calcule" in palavras or "calcula" in palavras:
         c.voz_reprodutor(c.motor_gpt(voz))  
     elif ia in palavras and "converta" in palavras:
         c.voz_reprodutor(c.motor_gpt(voz))  
@@ -175,8 +175,9 @@ def validador (voz):
     elif "oi" in palavras and ia in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(f"Oi {man}, eu estou te ouvindo!")
-        
-        c.voz_reprodutor(c.motor_gpt(c.reconhecedor_voz()))
+        agora = datetime.datetime.now()
+        data_formatada = agora.strftime("%Y-%m-%d %H:%M:%S")
+        c.voz_reprodutor(c.motor_gpt(f" Data atual: {data_formatada}{c.reconhecedor_voz()}"))
         #del palavras
         execucao()
         
