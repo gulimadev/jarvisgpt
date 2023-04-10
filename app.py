@@ -7,6 +7,8 @@ from asciimatics.screen import Screen
 import re
 import dotenv as dotenv
 import openai
+import time
+
 
 c = Main.Main()
 dotenv.load_dotenv()
@@ -88,6 +90,11 @@ def validador (voz):
     elif ia in palavras and "converta" in palavras:
         c.voz_reprodutor(c.motor_gpt(voz))  
             
+    elif ia in palavras and "download" in palavras:
+        b = Main.Bank()
+        c.voz_reprodutor("Iniciando modo download")
+        terminal = threading.Thread(target=os.system, args=(f"wt new-tab -p 'windows-terminal' cmd /k python .\download.py",))
+        terminal.start()
     elif (ia in palavras) and ("buscar" in palavras or "busca" in palavras or "procure" in palavras) and "youtube" in palavras:
         index = palavras.index("youtube") + 1
         pesquisa = "+".join(palavras[index:])
@@ -172,6 +179,10 @@ def validador (voz):
         os.system("start receitas.txt")
         c.voz_reprodutor(resposta_receita)
     
+    elif ia in palavras and "netflix" in palavras:
+        c.voz_reprodutor("Ok, estou abrindo o Netflix")
+        os.system("start https://www.netflix.com/browse")
+    
     elif "oi" in palavras and ia in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(f"Oi {man}, eu estou te ouvindo!")
@@ -217,9 +228,7 @@ def validador (voz):
         
         
 def animacao():
-    
     Screen.wrapper(c.demo)
-    
 
 def string_para_datetime(string_data_hora, formato):
 

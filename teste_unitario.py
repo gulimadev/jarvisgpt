@@ -12,23 +12,36 @@ from requests import post
 import datetime
 from pytube import YouTube
 from pydub import AudioSegment
+import threading
+from pytube import YouTube
+from moviepy.editor import *
+
+
+
+
+
+
 
 
 
 c = Main()
 load_dotenv()
 if __name__ == "__main__":
+    pass
     #url = 'https://www.youtube.com/watch?v=LVbUNRwpXzw&t=1310s'
     #video = YouTube(url)
     #video.streams.get_highest_resolution().download()
-    video = AudioSegment.from_file("Music for Productive Work — Tony Starks Concentration Mix.mp4", format="mp4")
+    # video = AudioSegment.from_file("Music for Productive Work — Tony Starks Concentration Mix.mp4", format="mp4")
 
-    # Extraia o áudio do arquivo de vídeo
-    audio = video.set_channels(1)  # converte para um canal de áudio mono
-    audio = audio.set_frame_rate(44100)  # ajusta a taxa de amostragem para 44100 Hz (padrão do MP3)
+    # # Extraia o áudio do arquivo de vídeo
+    # audio = video.set_channels(1)  # converte para um canal de áudio mono
+    # audio = audio.set_frame_rate(44100)  # ajusta a taxa de amostragem para 44100 Hz (padrão do MP3)
 
     # Salve o arquivo de áudio MP3
-    audio.export("audio.mp3", format="mp3")
+    
+
+    
+
 
     #     # Configuração do ambiente com as credenciais e permissões necessárias
     # agora = datetime.datetime.now()

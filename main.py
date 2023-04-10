@@ -14,6 +14,9 @@ import keyboard
 import dotenv as dotenv
 import mysql.connector
 import datetime
+import threading
+from pytube import YouTube
+from moviepy.editor import *
 
 
 
