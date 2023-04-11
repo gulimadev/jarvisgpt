@@ -184,6 +184,23 @@ def validador (voz):
         c.voz_reprodutor("Ok, estou abrindo o Netflix")
         os.system("start https://www.netflix.com/browse")
     
+    elif ia in palavras and "registrar" in palavras or "registra" in palavras or "cadastra" in palavras and "lista" in palavras:
+        
+        m = Main.Main()
+        m.voz_reprodutor("Ok, o que deseja registrar?")
+        #execute interface grafica para registrar lista
+        m.interface_lista("Registrar Lista", "Digite os itens da lista separados por virgula")
+    elif ia in palavras and "ver" in palavras and "lista" in palavras or "listas" in palavras:
+        b = Main.Bank()
+        index = palavras.index("lista") + 1
+        ver =" ".join(palavras[index:])
+        b.exibir_lista(ver) #exemplo: ana ver minhas listas compras, roupas, items
+        
+    elif ia in palavras and "deletar" in palavras or "deleta" in palavras and "minha" in palavras and "lista" in palavras:
+        b = Main.Bank()
+        index = palavras.index("lista") + 1
+        ver =" ".join(palavras[index:])
+        b.deletar_itens_por_tipo(ver)
     elif "oi" in palavras and ia in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(f"Oi {man}, eu estou te ouvindo!")
