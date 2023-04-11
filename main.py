@@ -25,7 +25,7 @@ dotenv.load_dotenv()
 class Main:
 
     def demo(self,screen):
-        # Criar um renderizador com o texto "Bing"
+        # Criar um renderizador com o texto "Ana"
         ana = FigletText("Ana", font="banner")
         # Criar um efeito de ciclo que muda a cor do texto
         effect1 = Cycle(screen, ana, screen.height // 2 - 3)
@@ -127,7 +127,8 @@ class Main:
                         break
                 break
             
-            
+    
+             
             
 class Bank:
     #connect bank database
@@ -245,3 +246,37 @@ class Bank:
         self.cursor.close()
         self.cnx.close()
         #self.root.after(20000, self.alarme_lembretes)
+    def registrar_listas(self, items, tipo_lembrete):
+        self.connect()
+        self.items = items
+        for item in self.items:
+            self.query = "INSERT INTO lista (item, tipo_lembrete) VALUES (%s, %s)"
+            self.cursor.execute(self.query, (item, tipo_lembrete))
+            self.cnx.commit()        
+        self.cursor.close()
+        m = Main()
+        m.voz_reprodutor(f"Lista de {tipo_lembrete} registrada com sucesso")
+        print (f"Lista de {tipo_lembrete} registrada com sucesso")
+        
+    def ler_lista(self, tipo_lembrete):
+        self.connect()
+        self.tipo_lembrete = tipo_lembrete
+        self.query_lista = "SELECT id, item FROM lista WHERE tipo_lembrete = %s"
+        self.cursor.execute(self.query_lista, (self.tipo_lembrete,))
+        resultados = self.cursor.fetchall() # Obter uma lista de tuplas
+        m = Main()
+        for (id, item) in resultados:
+            m.voz_reprodutor(f"Item: {item} da lista de {self.tipo_lembrete}")
+            print(f"Item: {item}")
+        self.cursor.close()
+        
+    def delete_lista(self, tipo_lembrete):
+        self.connect()
+        self.tipo_lembrete = tipo_lembrete
+        self.query_delete = "DELETE FROM lista WHERE tipo_lembrete = %s"
+        self.cursor.execute(self.query_delete, (self.tipo_lembrete,))
+        self.cnx.commit()
+        m = Main()
+        m.voz_reprodutor(f"Lista de {self.tipo_lembrete} deletada com sucesso")
+        print (f"Lista de {self.tipo_lembrete} deletada com sucesso")
+        self.cursor.close()
