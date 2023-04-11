@@ -14,7 +14,11 @@ import keyboard
 import dotenv as dotenv
 import mysql.connector
 import datetime
-
+import threading
+from pytube import YouTube
+from moviepy.editor import *
+import tkinter as tk
+import tkinter.messagebox as messagebox
 
 
 dotenv.load_dotenv()
@@ -22,7 +26,7 @@ dotenv.load_dotenv()
 class Main:
 
     def demo(self,screen):
-        # Criar um renderizador com o texto "Bing"
+        # Criar um renderizador com o texto "Ana"
         ana = FigletText("Ana", font="banner")
         # Criar um efeito de ciclo que muda a cor do texto
         effect1 = Cycle(screen, ana, screen.height // 2 - 3)
@@ -107,8 +111,9 @@ class Main:
         try:
             temperatura = data["main"]["temp"]
             descricao_clima = data["weather"][0]["description"]
+            descricao_clima_br = self.motor_gpt(f"Traduza para portugues brasil esta frase: {descricao_clima}")
             self.voz_reprodutor(f"A temperatura atual é de {temperatura:.1f} graus Celsius, na cidade de {LOCATION}")
-            self.voz_reprodutor(f"A previsão do tempo é de {descricao_clima}.")
+            self.voz_reprodutor(f"A previsão do tempo é de {descricao_clima_br}.")
         except KeyError:
             self.voz_reprodutor(f"No momento não estou conseguindo detectar a temperatura e previsão do tempo.")
     def ligAlarme(self, hora, minuto):
@@ -124,7 +129,39 @@ class Main:
                         break
                 break
             
-            
+    def interface_lista(self, title, text):
+        b = Bank()
+        b.connect()
+        janela = tk.Tk()
+
+        # Define o título da janela
+        janela.title(title)
+        janela.geometry("400x200")
+        # Cria uma label
+        label = tk.Label(janela, text=text)
+        label.pack()
+
+        # Cria uma entrada de texto
+        nome_lista = tk.Entry(janela, width=40)  # Define a largura da entrada para 40 caracteres
+        nome_lista.pack()
+        
+        itens = tk.Entry(janela, width=40)  # Define a largura da itens para 40 caracteres
+        itens.pack()
+        
+        def button_execution():
+            lista = itens.get().lower()
+            lista_list = lista.split(",")
+            lista_list_clean = [item.strip() for item in lista_list]
+            b.registrar_listas(lista_list_clean, nome_lista.get())
+            #messagebox
+            tk.messagebox.showinfo("Sucesso", "Lista registrada com sucesso!")
+            janela.destroy()
+        # Cria um botão
+        botao = tk.Button(janela, text="OK", command=button_execution)
+        botao.pack()
+        
+        # Inicia o loop principal de eventos da janela
+        janela.mainloop()
             
 class Bank:
     #connect bank database
@@ -247,3 +284,92 @@ class Bank:
         self.cursor.close()
         self.cnx.close()
         #self.root.after(20000, self.alarme_lembretes)
+    def registrar_listas(self, items, tipo_lembrete):
+        self.connect()
+        self.items = items
+        for item in self.items:
+            self.query = "INSERT INTO lista (item, tipo_lembrete) VALUES (%s, %s)"
+            self.cursor.execute(self.query, (item, tipo_lembrete))
+            self.cnx.commit()        
+        self.cursor.close()
+        m = Main()
+        m.voz_reprodutor(f"Lista de {tipo_lembrete} registrada com sucesso")
+        print (f"Lista de {tipo_lembrete} registrada com sucesso")
+        
+    def ler_lista(self, tipo_lembrete):
+        b = Bank()
+        b.connect()
+        
+        # Consultar todos os tipos distintos de lembrete da tabela
+        b.cursor.execute("SELECT DISTINCT tipo_lembrete FROM lista")
+        tipos = [t[0] for t in  b.cursor.fetchall()]
+        
+        # Verificar se o tipo de lembrete solicitado existe na lista de tipos
+        if tipo_lembrete not in tipos:
+            m = Main()
+            m.voz_reprodutor(f"Desculpe, não há lista de {tipo_lembrete} cadastrada.")
+            b.cursor.close()
+            return
+        
+        # Criar a consulta SQL para listar os itens do tipo de lembrete solicitado
+        query_verifica = "SELECT item FROM lista WHERE tipo_lembrete = %s"
+        
+        # Executar a consulta SQL com o parâmetro
+        b.cursor.execute(query_verifica, (tipo_lembrete,))
+        resultados =    b.cursor.fetchall()
+        
+        # Criar uma lista vazia para armazenar os itens
+        lista_itens = []
+        
+        # Iterar sobre as tuplas da lista de resultados e adicionar os itens à lista criada acima
+        for tupla in resultados:
+            lista_itens.append(tupla[0])  # supondo que a coluna `item` é a primeira coluna (índice 0) na tupla
+        
+        # Reproduzir a lista de itens para o usuário
+        m = Main()
+        m.voz_reprodutor(f"Os itens da lista de {tipo_lembrete} são: {', '.join(lista_itens)}")
+        
+        b.cursor.close()
+        
+    
+    
+    def exibir_lista(self, tipo_lembrete):
+        # Chama a função ler_lista para obter os itens da lista
+        lista_itens = self.ler_lista(tipo_lembrete)
+        # Cria uma nova janela
+        janela = tk.Tk()
+        janela.title(f"Lista de {tipo_lembrete}")
+        
+        # Cria um widget de texto para exibir os itens da lista
+        texto = tk.Text(janela)
+        texto.pack()
+        
+        # Adiciona cada item da lista ao widget de texto
+        for item in lista_itens:
+            texto.insert(tk.END, item + "\n")
+        
+        # Inicia o loop principal do tkinter para exibir a janela
+        janela.mainloop()
+        
+    def deletar_itens_por_tipo(self,tipo_lembrete):
+        m = Main()
+        b = Bank()
+        b.connect()
+        # Verificar se o tipo de lembrete solicitado existe na tabela de lista
+        b.cursor.execute("SELECT DISTINCT tipo_lembrete FROM lista")
+        tipos = [t[0] for t in  b.cursor.fetchall()]
+        if tipo_lembrete not in tipos:
+            print(f"Desculpe, não há lista de {tipo_lembrete} cadastrada.")
+            b.cursor.close()
+            return
+        # Criar a consulta SQL para deletar os itens do tipo de lembrete solicitado
+        query = "DELETE FROM lista WHERE tipo_lembrete = %s"
+        
+        # Executar a consulta SQL com o parâmetro
+        b.cursor.execute(query, (tipo_lembrete,))
+        b.cnx.commit()
+        
+        # Reproduzir mensagem de confirmação
+        m.voz_reprodutor(f"Os itens da lista de {tipo_lembrete} foram deletados com sucesso.")
+        print(f"Os itens da lista de {tipo_lembrete} foram deletados com sucesso.")
+        b.cursor.close()

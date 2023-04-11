@@ -7,6 +7,8 @@ from asciimatics.screen import Screen
 import re
 import dotenv as dotenv
 import openai
+import time
+
 
 c = Main.Main()
 dotenv.load_dotenv()
@@ -83,11 +85,17 @@ def validador (voz):
         c.voz_reprodutor(c.motor_gpt(voz))
     elif ia in palavras and "traduza" in palavras:        
         c.voz_reprodutor(c.motor_gpt(voz))
-    elif ia in palavras and "calcule" in palavras:
+    elif ia in palavras and "calcule" in palavras or "calcula" in palavras:
         c.voz_reprodutor(c.motor_gpt(voz))  
     elif ia in palavras and "converta" in palavras:
         c.voz_reprodutor(c.motor_gpt(voz))  
             
+    elif ia in palavras and "download" in palavras:
+        b = Main.Bank()
+        c.voz_reprodutor("Iniciando modo download")
+        arg = r"wt new-tab -p 'windows-terminal' cmd /k python C:\Users\guuhf\Desktop\projetos\jarvisgpt\download.py"
+        terminal = threading.Thread(target=os.system, args=(arg,))
+        terminal.start()
     elif (ia in palavras) and ("buscar" in palavras or "busca" in palavras or "procure" in palavras) and "youtube" in palavras:
         index = palavras.index("youtube") + 1
         pesquisa = "+".join(palavras[index:])
@@ -172,11 +180,33 @@ def validador (voz):
         os.system("start receitas.txt")
         c.voz_reprodutor(resposta_receita)
     
+    elif ia in palavras and "netflix" in palavras:
+        c.voz_reprodutor("Ok, estou abrindo o Netflix")
+        os.system("start https://www.netflix.com/browse")
+    
+    elif ia in palavras and "registrar" in palavras or "registra" in palavras or "cadastra" in palavras and "lista" in palavras:
+        
+        m = Main.Main()
+        m.voz_reprodutor("Ok, o que deseja registrar?")
+        #execute interface grafica para registrar lista
+        m.interface_lista("Registrar Lista", "Digite os itens da lista separados por virgula")
+    elif ia in palavras and "ver" in palavras and "lista" in palavras or "listas" in palavras:
+        b = Main.Bank()
+        index = palavras.index("lista") + 1
+        ver =" ".join(palavras[index:])
+        b.exibir_lista(ver) #exemplo: ana ver minhas listas compras, roupas, items
+        
+    elif ia in palavras and "deletar" in palavras or "deleta" in palavras and "minha" in palavras and "lista" in palavras:
+        b = Main.Bank()
+        index = palavras.index("lista") + 1
+        ver =" ".join(palavras[index:])
+        b.deletar_itens_por_tipo(ver)
     elif "oi" in palavras and ia in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(f"Oi {man}, eu estou te ouvindo!")
-        
-        c.voz_reprodutor(c.motor_gpt(c.reconhecedor_voz()))
+        agora = datetime.datetime.now()
+        data_formatada = agora.strftime("%Y-%m-%d %H:%M:%S")
+        c.voz_reprodutor(c.motor_gpt(f" Data atual: {data_formatada}{c.reconhecedor_voz()}"))
         #del palavras
         execucao()
         
@@ -216,9 +246,7 @@ def validador (voz):
         
         
 def animacao():
-    
     Screen.wrapper(c.demo)
-    
 
 def string_para_datetime(string_data_hora, formato):
 
