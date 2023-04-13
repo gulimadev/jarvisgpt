@@ -7,7 +7,6 @@ from asciimatics.screen import Screen
 import re
 import dotenv as dotenv
 import openai
-import time
 
 
 c = Main.Main()
@@ -48,7 +47,10 @@ comandos_windows = {
 
 def execucao():
     while True:
+        
         validador(c.reconhecedor_voz())
+        
+        
 
 
 def validador (voz):
@@ -183,6 +185,11 @@ def validador (voz):
     elif ia in palavras and "netflix" in palavras:
         c.voz_reprodutor("Ok, estou abrindo o Netflix")
         os.system("start https://www.netflix.com/browse")
+        
+    elif ia in palavras and "notícias" in palavras or "notícia" in palavras:
+        c.voz_reprodutor("Ok, estou buscando as notícias")
+        n = Main.Noticias()
+        n.noticias_g1()
     
     elif ia in palavras and "registrar" in palavras or "registra" in palavras or "cadastra" in palavras and "lista" in palavras:
         
@@ -201,6 +208,7 @@ def validador (voz):
         index = palavras.index("lista") + 1
         ver =" ".join(palavras[index:])
         b.deletar_itens_por_tipo(ver)
+
     elif "oi" in palavras and ia in palavras:
         print ("Oi eu estou te ouvindo!")
         c.voz_reprodutor(f"Oi {man}, eu estou te ouvindo!")

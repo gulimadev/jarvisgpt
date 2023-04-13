@@ -16,7 +16,11 @@ import threading
 from pytube import YouTube
 from moviepy.editor import *
 import tkinter as tk
-
+from bs4 import BeautifulSoup
+import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from bs4 import BeautifulSoup
 
 
 
@@ -26,109 +30,136 @@ import tkinter as tk
 
 c = Main()
 load_dotenv()
+
+
+
+
+def noticias_g1():
+        url = 'http://g1.com.br/'
+        header = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                                'AppleWebKit/537.36 (KHTML, like Gecko) '
+                                'Chrome/51.0.2704.103 Safari/537.36'}
+        req = requests.get(url, headers=header)
+        html = req.text
+        soup = BeautifulSoup(html, 'html.parser')
+        noticias = soup.find_all('a', class_='feed-post-link')
+        titulos = [noticia.get_text() for noticia in noticias]
+        noticia_titulo = ""
+        for titulo in titulos:
+            noticia_titulo += f"\n{titulo}"
+        c.voz_reprodutor(f"as noticias do G1 do dia são: {noticia_titulo}")
+
+
+
 if __name__ == "__main__":
-    b = Bank()
-    def ler_lista_filtrada( tipo_lembrete, busca):
-        
-        b.connect()
-        tipo_lembrete = tipo_lembrete
-        
-        palavras = busca.split()  # separar as palavras da string de busca
-        
-        # criar uma lista vazia para armazenar as condições da consulta SQL
-        condicoes = []
-        
-        # adicionar uma condição para cada palavra da busca, usando a sintaxe LIKE '%palavra%'
-        for palavra in palavras:
-            condicoes.append("item LIKE %s")
-        
-        # juntar todas as condições com o operador OR
-        condicoes_sql = " OR ".join(condicoes)
-        
-        # criar a consulta SQL com as condições da busca
-        query_verifica = f"SELECT * FROM lista WHERE tipo_lembrete = %s AND ({condicoes_sql})"
-        
-        # executar a consulta SQL com os parâmetros
-        parametros = [  tipo_lembrete] + [f"%{palavra}%" for palavra in palavras]  # criar uma lista com os parâmetros da consulta SQL
-        b.cursor.execute( query_verifica, parametros)
-        resultados =    b.cursor.fetchall()  # Obter uma lista de tuplas
-        
-        # criar uma lista vazia para armazenar os itens da coluna `lembrete`
-        lista_itens = []
-        
-        # iterar sobre as tuplas da lista de resultados e adicionar os itens à lista criada acima
-        for tupla in resultados:
-            lista_itens.append(tupla[1])  # supondo que a coluna `lembrete` é a segunda coluna (índice 1) na tupla
-        
-        # reproduzir a lista de itens para o usuário
-        m = Main()
-        m.voz_reprodutor(f"Os itens da lista de {tipo_lembrete} que correspondem à busca {busca} são: {', '.join(lista_itens)}")
-        
-        b.cursor.close()
-    #palavras = [""]
+
+    
+    noticias_g1()
     
     
-    def ler_lista(tipo_lembrete):
-        b.connect()
+    
+    # b = Bank()
+    # def ler_lista_filtrada( tipo_lembrete, busca):
         
-        # Consultar todos os tipos distintos de lembrete da tabela
-        b.cursor.execute("SELECT DISTINCT tipo_lembrete FROM lista")
-        tipos = [t[0] for t in  b.cursor.fetchall()]
+    #     b.connect()
+    #     tipo_lembrete = tipo_lembrete
         
-        # Verificar se o tipo de lembrete solicitado existe na lista de tipos
-        if tipo_lembrete not in tipos:
-            m = Main()
-            m.voz_reprodutor(f"Desculpe, não há lista de {tipo_lembrete} cadastrada.")
-            b.cursor.close()
-            return
+    #     palavras = busca.split()  # separar as palavras da string de busca
         
-        # Criar a consulta SQL para listar os itens do tipo de lembrete solicitado
-        query_verifica = "SELECT item FROM lista WHERE tipo_lembrete = %s"
+    #     # criar uma lista vazia para armazenar as condições da consulta SQL
+    #     condicoes = []
         
-        # Executar a consulta SQL com o parâmetro
-        b.cursor.execute(query_verifica, (tipo_lembrete,))
-        resultados =    b.cursor.fetchall()
+    #     # adicionar uma condição para cada palavra da busca, usando a sintaxe LIKE '%palavra%'
+    #     for palavra in palavras:
+    #         condicoes.append("item LIKE %s")
         
-        # Criar uma lista vazia para armazenar os itens
-        lista_itens = []
+    #     # juntar todas as condições com o operador OR
+    #     condicoes_sql = " OR ".join(condicoes)
         
-        # Iterar sobre as tuplas da lista de resultados e adicionar os itens à lista criada acima
-        for tupla in resultados:
-            lista_itens.append(tupla[0])  # supondo que a coluna `item` é a primeira coluna (índice 0) na tupla
+    #     # criar a consulta SQL com as condições da busca
+    #     query_verifica = f"SELECT * FROM lista WHERE tipo_lembrete = %s AND ({condicoes_sql})"
         
-        # Reproduzir a lista de itens para o usuário
-        m = Main()
-        m.voz_reprodutor(f"Os itens da lista de {tipo_lembrete} são: {', '.join(lista_itens)}")
+    #     # executar a consulta SQL com os parâmetros
+    #     parametros = [  tipo_lembrete] + [f"%{palavra}%" for palavra in palavras]  # criar uma lista com os parâmetros da consulta SQL
+    #     b.cursor.execute( query_verifica, parametros)
+    #     resultados =    b.cursor.fetchall()  # Obter uma lista de tuplas
         
-        b.cursor.close()
+    #     # criar uma lista vazia para armazenar os itens da coluna `lembrete`
+    #     lista_itens = []
+        
+    #     # iterar sobre as tuplas da lista de resultados e adicionar os itens à lista criada acima
+    #     for tupla in resultados:
+    #         lista_itens.append(tupla[1])  # supondo que a coluna `lembrete` é a segunda coluna (índice 1) na tupla
+        
+    #     # reproduzir a lista de itens para o usuário
+    #     m = Main()
+    #     m.voz_reprodutor(f"Os itens da lista de {tipo_lembrete} que correspondem à busca {busca} são: {', '.join(lista_itens)}")
+        
+    #     b.cursor.close()
+    # #palavras = [""]
+    
+    
+    # def ler_lista(tipo_lembrete):
+    #     b.connect()
+        
+    #     # Consultar todos os tipos distintos de lembrete da tabela
+    #     b.cursor.execute("SELECT DISTINCT tipo_lembrete FROM lista")
+    #     tipos = [t[0] for t in  b.cursor.fetchall()]
+        
+    #     # Verificar se o tipo de lembrete solicitado existe na lista de tipos
+    #     if tipo_lembrete not in tipos:
+    #         m = Main()
+    #         m.voz_reprodutor(f"Desculpe, não há lista de {tipo_lembrete} cadastrada.")
+    #         b.cursor.close()
+    #         return
+        
+    #     # Criar a consulta SQL para listar os itens do tipo de lembrete solicitado
+    #     query_verifica = "SELECT item FROM lista WHERE tipo_lembrete = %s"
+        
+    #     # Executar a consulta SQL com o parâmetro
+    #     b.cursor.execute(query_verifica, (tipo_lembrete,))
+    #     resultados =    b.cursor.fetchall()
+        
+    #     # Criar uma lista vazia para armazenar os itens
+    #     lista_itens = []
+        
+    #     # Iterar sobre as tuplas da lista de resultados e adicionar os itens à lista criada acima
+    #     for tupla in resultados:
+    #         lista_itens.append(tupla[0])  # supondo que a coluna `item` é a primeira coluna (índice 0) na tupla
+        
+    #     # Reproduzir a lista de itens para o usuário
+    #     m = Main()
+    #     m.voz_reprodutor(f"Os itens da lista de {tipo_lembrete} são: {', '.join(lista_itens)}")
+        
+    #     b.cursor.close()
         
     
     
-    def exibir_lista(tipo_lembrete):
-        # Chama a função ler_lista para obter os itens da lista
-        lista_itens = ler_lista(tipo_lembrete)
-        # Cria uma nova janela
-        janela = tk.Tk()
-        janela.title(f"Lista de {tipo_lembrete}")
+    # def exibir_lista(tipo_lembrete):
+    #     # Chama a função ler_lista para obter os itens da lista
+    #     lista_itens = ler_lista(tipo_lembrete)
+    #     # Cria uma nova janela
+    #     janela = tk.Tk()
+    #     janela.title(f"Lista de {tipo_lembrete}")
         
-        # Cria um widget de texto para exibir os itens da lista
-        texto = tk.Text(janela)
-        texto.pack()
+    #     # Cria um widget de texto para exibir os itens da lista
+    #     texto = tk.Text(janela)
+    #     texto.pack()
         
-        # Adiciona cada item da lista ao widget de texto
-        for item in lista_itens:
-            texto.insert(tk.END, item + "\n")
+    #     # Adiciona cada item da lista ao widget de texto
+    #     for item in lista_itens:
+    #         texto.insert(tk.END, item + "\n")
         
-        # Inicia o loop principal do tkinter para exibir a janela
-        janela.mainloop()
-        #busca = " ".join(palavras)  # juntar todas as palavras em uma única string
-        #ler = ler_lista(tipo_lembrete="casa dos pais", busca=busca)  # passar a string como um único parâmetro
-    m = Main()
-    lista = m.reconhecedor_voz()
-    lista_ler = lista.split()
-    index = lista_ler.index("lista") + 1
-    ver =" ".join(lista_ler[index:])
-    ler = exibir_lista(ver)
+    #     # Inicia o loop principal do tkinter para exibir a janela
+    #     janela.mainloop()
+    #     #busca = " ".join(palavras)  # juntar todas as palavras em uma única string
+    #     #ler = ler_lista(tipo_lembrete="casa dos pais", busca=busca)  # passar a string como um único parâmetro
+    # m = Main()
+    # lista = m.reconhecedor_voz()
+    # lista_ler = lista.split()
+    # index = lista_ler.index("lista") + 1
+    # ver =" ".join(lista_ler[index:])
+    # ler = exibir_lista(ver)
     
     #url = 'https://www.youtube.com/watch?v=LVbUNRwpXzw&t=1310s'
     #video = YouTube(url)

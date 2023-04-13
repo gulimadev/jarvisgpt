@@ -19,6 +19,9 @@ from pytube import YouTube
 from moviepy.editor import *
 import tkinter as tk
 import tkinter.messagebox as messagebox
+import cv2
+from deepface import DeepFace
+from bs4 import BeautifulSoup
 
 
 dotenv.load_dotenv()
@@ -373,3 +376,20 @@ class Bank:
         m.voz_reprodutor(f"Os itens da lista de {tipo_lembrete} foram deletados com sucesso.")
         print(f"Os itens da lista de {tipo_lembrete} foram deletados com sucesso.")
         b.cursor.close()
+        
+class Noticias:
+    def noticias_g1(self):
+        url = 'http://g1.com.br/'
+        header = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                                'AppleWebKit/537.36 (KHTML, like Gecko) '
+                                'Chrome/51.0.2704.103 Safari/537.36'}
+        req = requests.get(url, headers=header)
+        html = req.text
+        soup = BeautifulSoup(html, 'html.parser')
+        noticias = soup.find_all('a', class_='feed-post-link')
+        titulos = [noticia.get_text() for noticia in noticias]
+        noticia_titulo = ""
+        for titulo in titulos:
+            noticia_titulo += f"\n{titulo}"
+        m= Main()
+        m.voz_reprodutor(f"as notícias do G1 do dia são: {noticia_titulo}")
