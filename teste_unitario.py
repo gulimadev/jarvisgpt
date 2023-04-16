@@ -1,61 +1,17 @@
-from main import Main, Bank
-from asciimatics.screen import Screen
-from app import validador
-from dotenv import load_dotenv
-import spotipy
-from spotipy import oauth2, SpotifyOAuth
-import spotipy.util as util
-from spotipy.oauth2 import SpotifyClientCredentials
-import os
-from playsound import playsound
-from requests import post
-import datetime
-from pytube import YouTube
-from pydub import AudioSegment
-import threading
-from pytube import YouTube
-from moviepy.editor import *
-import tkinter as tk
-from bs4 import BeautifulSoup
-import requests
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from bs4 import BeautifulSoup
-
-
-
-
-
-
-
-c = Main()
-load_dotenv()
-
-
-
-
-def noticias_g1():
-        url = 'http://g1.com.br/'
-        header = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                                'AppleWebKit/537.36 (KHTML, like Gecko) '
-                                'Chrome/51.0.2704.103 Safari/537.36'}
-        req = requests.get(url, headers=header)
-        html = req.text
-        soup = BeautifulSoup(html, 'html.parser')
-        noticias = soup.find_all('a', class_='feed-post-link')
-        titulos = [noticia.get_text() for noticia in noticias]
-        noticia_titulo = ""
-        for titulo in titulos:
-            noticia_titulo += f"\n{titulo}"
-        c.voz_reprodutor(f"as noticias do G1 do dia são: {noticia_titulo}")
-
-
+import platform
 
 if __name__ == "__main__":
 
     
-    noticias_g1()
-    
+
+
+# Obter o nome do sistema operacional
+    print(platform.system())
+
+    # Obter a versão do sistema operacional
+    print(platform.version())
+
+        
     
     
     # b = Bank()

@@ -20,7 +20,6 @@ from moviepy.editor import *
 import tkinter as tk
 import tkinter.messagebox as messagebox
 import cv2
-from deepface import DeepFace
 from bs4 import BeautifulSoup
 
 
