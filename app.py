@@ -7,6 +7,7 @@ from asciimatics.screen import Screen
 import re
 import dotenv as dotenv
 import openai
+import platform
 
 
 c = Main.Main()
@@ -104,7 +105,10 @@ def validador (voz):
         index_voz = palavras.index("youtube") + 1
         pesquisa_voz = " ".join(palavras[index_voz:])
         url = f"https://www.youtube.com/results?search_query={pesquisa}"
-        os.system(f"start {url}")
+        if platform.system() == "Linux":
+            os.system(f"google-chrome {url}")
+        else:
+            os.system(f"start {url}")
         c.voz_reprodutor(f"Ok, {man}, estou pesquisando {pesquisa_voz} no Youtube.")
     
     elif "lembre" in palavras or "lembra" in palavras and "de" in palavras:
@@ -184,7 +188,10 @@ def validador (voz):
     
     elif ia in palavras and "netflix" in palavras:
         c.voz_reprodutor("Ok, estou abrindo o Netflix")
-        os.system("start https://www.netflix.com/browse")
+        if platform.system() == "Linux":
+            os.system("google-chrome https://www.netflix.com/browse")
+        else:
+            os.system("start https://www.netflix.com/browse")
         
     elif ia in palavras and "notícias" in palavras or "notícia" in palavras:
         c.voz_reprodutor("Ok, estou buscando as notícias")
@@ -230,7 +237,10 @@ def validador (voz):
                         index_voz = palavras.index("site") + 1
                         pesquisa_voz = " ".join(palavras[index_voz:])
                         url = f"https://www.google.com/search?q={pesquisa}"
-                        os.system(f"start {url}")
+                        if platform.system() == "Linux":
+                            os.system(f"google-chrome {url}") 
+                        else:
+                            os.system(f"start {url}")
                         c.voz_reprodutor(f"Ok, {man}, estou pesquisando {pesquisa_voz} no Google.")
                         execucao()
                     elif chaves in ["acorda"]:
